@@ -1,0 +1,180 @@
+-- Users
+
+INSERT INTO Users (first_name, last_name, email, phone, pass, city_of_residence)
+VALUES 
+('Ali', 'Mohammadi', 'ali@example.com', '09120000001', 'hashed_password1', 'Tehran'),
+('Sara', 'Ahmadi', 'sara@example.com', '09120000002', 'hashed_password2', 'Isfahan'),
+('Reza', 'Kiani', 'reza@example.com', '09120000003', 'hashed_password3', 'Shiraz'),
+('Mina', 'Hosseini', 'mina@example.com', '09120000004', 'hashed_password4', 'Tabriz'),
+('Omid', 'Gholami', 'omid@example.com', '09120000005', 'hashed_password5', 'Mashhad');
+
+
+-- Error
+
+INSERT INTO Users (first_name, last_name, email, phone, pass, city_of_residence)
+VALUES ('Test', 'User', 'ali@example.com', '09120000001', 'hashed_password4', 'Mashhad');
+ 
+-- DELETE
+
+DELETE FROM Users WHERE email = 'reza@example.com';
+
+-- PASSENGER
+
+INSERT INTO Passenger (user_id, account_status,sign_up_date)
+VALUES 
+(8, 'Active' , NOW()),
+(9, 'Deactive' , NOW()),
+(10, 'Active' , NOW());
+
+-- List Of Passengers
+
+SELECT p.*, u.first_name, u.last_name, u.email, u.city_of_residence
+FROM Passenger p
+JOIN Users u ON p.user_id = u.user_id;
+
+-- Admins
+INSERT INTO Admins (user_id, admin_role)
+VALUES 
+(11, 'SuperAdmin'), 
+(12, 'SupportAdmin'); 
+
+-- List Of Admins
+
+SELECT a.*, u.first_name, u.last_name, u.email, a.admin_role
+FROM Admins a
+JOIN Users u ON a.user_id = u.user_id;
+
+-- ExpiryTime
+
+INSERT INTO ExpiryTime (expiry_time) 
+VALUES 
+('23:59:59'), 
+('12:00:00'), 
+('18:30:00');
+
+-- Ticket
+
+INSERT INTO Ticket (departure_location, arrival_location, arrival_date, departure_date, remaining_capacity, cost , departure_time) 
+VALUES 
+('Tehran', 'Isfahan', '2024-06-15', '2024-06-15', 30, 250000 , '00:59:59'),
+('Shiraz', 'Mashhad', '2024-07-10', '2024-07-10', 20, 400000 , '23:00:59'),
+('Tabriz', 'Tehran', '2024-08-01', '2024-08-01', 15, 350000 , '23:59:00'),
+('Mashhad', 'Isfahan', '2024-05-015', '2024-05-15', 35, 450000 , '23:00:00');
+
+
+-- Reservation
+
+INSERT INTO Reservation (ticket_id, class_trip_id, user_id, expiry_time_id, reservation_status, reservation_date)
+VALUES 
+(1, 1, 8, 1, 'Confirmed', NOW()),  
+(2, 2, 9, 2, 'Pending', NOW()),    
+(3, 1, 10, 3, 'Cancelled', NOW());  
+
+-- ASC (ascending sort)
+
+SELECT * FROM Ticket
+ORDER BY departure_date ASC;
+
+-- Indexing (for better search)
+
+CREATE INDEX idx_departure ON Ticket(departure_date, departure_time);
+
+-- Company
+
+INSERT INTO Vehicle (company_id, ticket_id) 
+VALUES 
+(1, 1),  -- یک وسیله نقلیه از `IranAir` برای بلیط `Tehran` به `Mashhad`
+(2, 2),  -- یک وسیله نقلیه از `Seir-o-Safar` برای بلیط `Shiraz` به `Tabriz`
+(3, 3);  -- یک وسیله نقلیه از `Raja Train` برای بلیط `Isfahan` به `Tehran`
+
+
+-- Vehicle
+
+INSERT INTO Vehicle (company_id, ticket_id) 
+VALUES 
+(1, 1),  -- یک وسیله نقلیه از `IranAir` برای بلیط `Tehran` به `Mashhad`
+(2, 2),  -- یک وسیله نقلیه از `Seir-o-Safar` برای بلیط `Shiraz` به `Tabriz`
+(3, 3);  -- یک وسیله نقلیه از `Raja Train` برای بلیط `Isfahan` به `Tehran`
+
+-- List of all vehicle with company name
+
+SELECT v.vehicle_id, c.company_name, t.departure_location, t.arrival_location, t.departure_date, t.remaining_capacity
+FROM Vehicle v
+JOIN Company c ON v.company_id = c.company_id
+JOIN Ticket t ON v.ticket_id = t.ticket_id;
+
+-- Payment
+
+INSERT INTO Payment (reservation_id, user_id, payment_date, payment_status, amount, payment_method)
+VALUES 
+(4, 8, NOW(), 'Completed', 250000, 'Credit Card'),  
+(5, 9, NOW(), 'Pending', 400000, 'PayPal'),  
+(6, 10, NOW(), 'Failed', 350000, 'Bank Transfer');
+
+-- List of payments and user name and payment method , ...
+
+SELECT p.payment_id, p.payment_date, p.payment_status, p.amount, p.payment_method, 
+       u.first_name, u.last_name, r.reservation_status
+FROM Payment p
+JOIN Users u ON p.user_id = u.user_id
+JOIN Reservation r ON p.reservation_id = r.reservation_id;
+
+-- Train facilities
+
+INSERT INTO TrainFacilities (wifi_access, catering, ventilation, flat_bed_seat) 
+VALUES 
+(TRUE, TRUE, TRUE, FALSE), 
+(FALSE, TRUE, TRUE, TRUE);
+
+-- Airplane faciities
+
+INSERT INTO AirplaneFacilities (wifi_access, catering, in_flight_entertainment) 
+VALUES 
+(TRUE, TRUE, TRUE), 
+(TRUE, FALSE, TRUE);
+
+-- Bus Facilities
+
+INSERT INTO BusFacilities (ventilation, catering, personal_monitor) 
+VALUES 
+(TRUE, FALSE, TRUE), 
+(TRUE, TRUE, FALSE);
+
+-- Train 
+
+INSERT INTO Train (vehicle_id, train_facilities_id, car_number, is_reserved_fully) 
+VALUES 
+(1, 1, 10, FALSE),  
+(2, 2, 8, TRUE);
+
+-- Bus
+
+INSERT INTO Bus (vehicle_id, bus_facilities_id, bus_type, seats_row_per_row) 
+VALUES 
+(2, 1, 'VIP', 3),  
+(3, 2, 'Normal', 4);
+
+-- Airplane
+
+INSERT INTO Airplane (vehicle_id, airplane_facilities_id, airline, airplane_class, arrival_airport, departure_airport, flight_number) 
+VALUES 
+(3, 1, 'IranAir', 'Business', 'IKA', 'THR', 'IR-745'),  
+(1, 2, 'MahanAir', 'Economy', 'MHD', 'IFN', 'MH-321');
+
+-- List of vehicles
+
+SELECT t.vehicle_id, c.company_name, t.car_number, t.is_reserved_fully
+FROM Train t
+JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
+JOIN Company c ON v.company_id = c.company_id;
+
+
+SELECT b.vehicle_id, c.company_name, b.bus_type, b.seats_row_per_row
+FROM Bus b
+JOIN Vehicle v ON b.vehicle_id = v.vehicle_id
+JOIN Company c ON v.company_id = c.company_id;
+
+SELECT a.vehicle_id, c.company_name, a.airline, a.airplane_class, a.arrival_airport, a.departure_airport, a.flight_number
+FROM Airplane a
+JOIN Vehicle v ON a.vehicle_id = v.vehicle_id
+JOIN Company c ON v.company_id = c.company_id;
