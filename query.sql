@@ -198,7 +198,7 @@ JOIN
 WHERE 
     r.reservation_status = 'Confirmed'
 GROUP BY 
-    u.user_id, u.first_name, u.last_name
+    u.user_id
 HAVING 
     COUNT(*) >= 2
 ORDER BY 
@@ -247,8 +247,10 @@ AND EXISTS (
 );
 
 -- Q15
-SELECT *
+SELECT t.ticket_id , r.reservation_id , CONCAT(u.first_name , ' ' , u.last_name) AS 'name' , r.reservation_date
 FROM Reservation r 
+JOIN Passengers p ON p.user_id = r.passenger_id
+JOIN Users u ON u.user_id = p.user_id
 JOIN 
   Ticket t USING (ticket_id)
 WHERE 
@@ -261,14 +263,12 @@ WHERE
     AND SECOND(r.reservation_date) >= SECOND('00');
 
 -- Q16
-WITH TicketRevenue AS (
+ WITH TicketSales AS (
     SELECT 
         t.ticket_id,
         CONCAT(l1.city, ' to ', l2.city) AS route,
         v.company_name,
-        COUNT(r.reservation_id) AS tickets_sold,
-        t.cost AS ticket_price,
-        COUNT(r.reservation_id) * t.cost AS total_revenue
+        COUNT(r.reservation_id) AS tickets_sold
     FROM 
         Ticket t
     JOIN 
@@ -282,39 +282,48 @@ WITH TicketRevenue AS (
     WHERE 
         r.reservation_status = 'Confirmed'
     GROUP BY 
-        t.ticket_id, l1.city, l2.city, v.company_name, t.cost
+        t.ticket_id
 )
-SELECT * FROM TicketRevenue
-ORDER BY total_revenue DESC
+SELECT * FROM TicketSales
+ORDER BY tickets_sold DESC
 LIMIT 1 OFFSET 1;
 
 -- Q17
+WITH AdminCancellations AS (
+    SELECT 
+        CONCAT(U.first_name, ' ', U.last_name) AS admin_name,
+        COUNT(*) AS admin_cancel_count
+    FROM 
+        Reservation R
+    JOIN 
+        Admins A ON R.admin_id = A.user_id
+    JOIN 
+        Users U ON A.user_id = U.user_id
+    WHERE 
+        R.reservation_status IN ('Cancelled By Admin')
+        AND R.admin_id IS NOT NULL
+    GROUP BY 
+        R.admin_id
+),
+TotalCancellations AS (
+    SELECT 
+        COUNT(*) AS total_cancel_count
+    FROM 
+        Reservation
+    WHERE 
+        reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin')
+)
 SELECT 
-    CONCAT(U.first_name, ' ', U.last_name) AS admin_name,
-    COUNT(CASE 
-        WHEN R.reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin') 
-        THEN 1 
-        END) AS cancel_count,
-    COUNT(*) AS total_reservations_handled,
-    ROUND(
-        100.0 * COUNT(CASE 
-            WHEN R.reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin') 
-            THEN 1 
-            END) / COUNT(*), 
-        2
-    ) AS cancel_percentage
+    AC.admin_name,
+    AC.admin_cancel_count,
+    TC.total_cancel_count,
+    ROUND(100.0 * AC.admin_cancel_count / TC.total_cancel_count, 2) AS cancel_percentage
 FROM 
-    Reservation R
-JOIN 
-    Admins A ON R.admin_id = A.user_id
-JOIN 
-    Users U ON A.user_id = U.user_id
-WHERE 
-    R.admin_id IS NOT NULL
-GROUP BY 
-    R.admin_id
+    AdminCancellations AC
+CROSS JOIN 
+    TotalCancellations TC
 ORDER BY 
-    cancel_count DESC
+    AC.admin_cancel_count DESC
 LIMIT 1;
 
 -- Q18
