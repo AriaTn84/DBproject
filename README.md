@@ -125,3 +125,132 @@ The ER Diagram is located in `database/er_diagram/er_diagram.pdf`. It includes:
 - `DataBAse_Alibaba-page-drawio.xml`: ER diagram xml file.
 
 ---
+
+## Phase 2: Table Creation and Query Implementation
+
+### Objectives
+- Finalize table structures in 3NF based on the ER Diagram.
+- Implement tables in PostgreSQL with proper indexes and constraints.
+- Write informational and analytical SQL queries.
+- Create stored procedures for repetitive and complex operations.
+
+### Table Creation
+- Tables are created with:
+  - **Primary Keys**: Unique identifiers for each record.
+  - **Foreign Keys**: Ensure referential integrity.
+  - **Indexes**: Optimize frequent search operations (e.g., ticket search by date or route).
+  - **Constraints**: Unique, Check, and Not Null constraints to enforce data integrity.
+- SQL script: `raahi.sql`.
+
+### Initial Data
+- At least 10 records per table are inserted to test functionality.
+- SQL script: `tests.sql`.
+
+### Queries
+The following informational and analytical queries are implemented (see `query.sql`):
+1. Users who have never reserved a ticket.
+2. Users who have purchased at least one ticket.
+3. Total payments by each user per month.
+4. Users who purchased exactly one ticket in each city.
+5. User who purchased the most recent ticket.
+6. Users with payments above the average.
+7. Number of tickets sold per transport type.
+8. Top 3 users with the most ticket purchases in the last week.
+9. Tickets sold in Tehran, broken down by city.
+10. Cities where the oldest registered user made purchases.
+11. List of site admins.
+12. Users with at least 2 ticket purchases.
+13. Users with at most 2 tickets for a specific transport type.
+14. Users who purchased tickets for all transport types.
+15. Tickets purchased today, ordered by purchase time.
+16. Second most sold ticket.
+17. Admin with the highest cancellation rate.
+18. Change the last name of the user with the most canceled tickets to "Redington".
+19. Delete all canceled tickets for user "Redington".
+20. Delete all canceled tickets in the system.
+21. Reduce the price of yesterday's Mahan Airlines tickets by 10%.
+22. Report topic and count for the ticket with the most reports.
+
+### Stored Procedures
+The following stored procedures are implemented (see `stored_procedures.sql`):
+1. List tickets purchased by a user (by email/phone).
+2. List users whose reservations were canceled by an admin.
+3. List tickets purchased in a specific city.
+4. Search tickets by keyword in passenger name, route, or class.
+5. List users from the same city as a given user.
+6. Top N users with the most purchases since a given date.
+7. List canceled tickets for a specific transport type.
+8. List users with the most reports for a specific topic.
+
+### Outputs
+- `database/rahii.sql`: Final table creation script.
+- `database/tests.sql`: Initial data insertion script.
+- `database/query.sql`: Informational and analytical queries.
+- `database/stored_procedures.sql`: Stored procedures for complex operations.
+
+---
+
+## Version Control
+
+- **Repository**: Hosted on GitHub.
+- **Branching Strategy**:
+  - Each phase is developed in a separate branch (e.g., `Phase1_ER-diagram`, `phase2`).
+  - Completed phases are merged into the `main` branch via Pull Requests.
+- **Commits**: At least 5 meaningful commits per phase, documenting incremental progress.
+- **Commit Guidelines**:
+  - Use descriptive messages (e.g., "Add ER Diagram for Phase 1", "Implement reservation queries").
+  - Avoid committing all changes at once to demonstrate iterative development.
+
+---
+
+## Bonus Features (Planned)
+- **GitHub Actions**: Automate CI/CD for database migrations and testing (to be implemented for bonus points).
+- **Query Optimization**: Use indexing and query optimization techniques for improved performance (partially implemented in Phase 2).
+
+---
+
+## How to Run
+
+1. Ensure PostgreSQL and Redis are running.
+2. Execute the SQL scripts in the following order:
+   - `raahi.sql`
+   - `tests.sql`
+   - `query.sql` (to test queries)
+   - `stored_procedures.sql` (to test procedures)
+3. Use an SQL client to verify the results of queries and stored procedures.
+
+---
+
+## Future Phases
+
+- **Phase 3**: Implement server-side logic and RESTful APIs using a backend framework (e.g., Node.js, Django).
+- **Phase 4**: Develop a user-friendly UI (web or mobile app) for ticket search, reservation, and management.
+
+---
+
+## Contributing
+
+This is a student project for the **Database Systems** course. Contributions are limited to the project team. For feedback or suggestions, contact the team via GitHub Issues.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
+
+## Contact
+
+- **Course Instructor**: Dr. Pishgou
+- **Senior TA**: Eng. Alireza Ghorbani
+- **Supervising TA**: Eng. Mohammad Hossein Hooshmand
+- **Repository Maintainer**: [Arya Tehrani/AryaTn84]
+
+---
+
+This README will be updated as the project progresses through Phases 3 and 4.
+
+---
+
+This `README.md` file provides a clear, professional, and detailed overview of the project up to the end of Phase 2, adhering to the project requirements. You can copy this content into a `README.md` file in your GitHub repository. Let me know if you need further adjustments or additional details!
