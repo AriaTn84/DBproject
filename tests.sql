@@ -288,17 +288,33 @@ UPDATE Reservation SET admin_id = 22 WHERE reservation_id = 32;
 
 -- --------------------------------------
 -- Q1
--- CALL GetUserPurchasedTickets('user@example.com', NULL);
-
+CALL GetUserPurchasedTickets('alice@example.com','');
+-- ----------
 -- Q2
--- CALL GetUsersWithCancelledReservations('sadra.j3@example.com', NULL);
-
+CALL GetUsersWithCancelledReservations('sadra.j3@example.com','');
+-- ----------
 -- Q3
--- CALL GetTicketsByDepartureCity('Tehran');
-
+CALL GetTicketsByDepartureCity('Los Angeles');
+-- -----------
 -- Q4
--- CALL SearchTicketsByTerm('Business');
--- CALL SearchTicketsByTerm('Smith');
--- CALL SearchTicketsByTerm('Premium');
--- CALL SearchTicketsByTerm('Los Angeles');
-
+CALL SearchTicketsByTerm('Smith');
+CALL SearchTicketsByTerm('Premium');
+CALL SearchTicketsByTerm('Los Angeles');
+-- -----------
+-- Q5
+CALL FindSameCityUsersExcludingSelf('alice@example.com' ,'' );
+CALL FindSameCityUsersExcludingSelf('' , '1234567890');
+CALL FindSameCityUsersExcludingSelf('' , '1234567892');
+-- -----------
+-- Q6
+CALL GetTopUsersByPurchasesAfterDate('2025-05-04', 10 ); 
+CALL GetTopUsersByPurchasesAfterDate('2025-04-09 04:24:27' , 3);
+CALL GetTopUsersByPurchasesAfterDate('2025-04-09 04:24:27' , 2);
+-- -----------
+-- Q7
+CALL GetCancelledTicketsByVehicleType('Train');
+CALL GetCancelledTicketsByVehicleType('Bus');
+CALL GetCancelledTicketsByVehicleType('Airplane');
+-- -----------
+-- Q8
+CALL GetUsersByReportCategory('Comfort');
