@@ -285,3 +285,20 @@ UPDATE Reservation SET admin_id = 19 WHERE reservation_id = 26;
 UPDATE Reservation SET admin_id = 20 WHERE reservation_id = 35;
 UPDATE Reservation SET admin_id = 21 WHERE reservation_id = 37;
 UPDATE Reservation SET admin_id = 22 WHERE reservation_id = 32;
+
+-- --------------------------------------
+-- Q1
+-- CALL GetUserPurchasedTickets('user@example.com', NULL);
+
+-- Q2
+-- CALL GetUsersWithCancelledReservations('sadra.j3@example.com', NULL);
+
+-- Q3
+-- CALL GetTicketsByDepartureCity('Tehran');
+
+-- Q4
+-- CALL SearchTicketsByTerm('Business');
+-- CALL SearchTicketsByTerm('Smith');
+-- CALL SearchTicketsByTerm('Premium');
+-- CALL SearchTicketsByTerm('Los Angeles');
+
