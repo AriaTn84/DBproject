@@ -84,7 +84,7 @@ BEGIN
       AND r.reservation_status = 'Cancelled By Admin'
 
         GROUP BY
-            u.user_id, user_name, user_email, user_phone
+            u.user_id
         HAVING
             COUNT(r.reservation_id) > 0
         ORDER BY
@@ -272,7 +272,7 @@ BEGIN
             AND py.payment_status = 'Completed'
             AND r.reservation_status = 'Confirmed'
         GROUP BY 
-            u.user_id, user_name, u.email, u.phone
+            u.user_id
         ORDER BY 
             total_purchases DESC,
             total_spent DESC
@@ -350,7 +350,7 @@ BEGIN
         WHERE 
             r.category = p_report_category
         GROUP BY 
-            u.user_id, user_name, u.email, u.phone
+            u.user_id
         ORDER BY 
             report_count DESC;
     END IF;
@@ -366,5 +366,21 @@ DELIMITER ;
 -- CALL SearchTicketsByTerm('Business');
 -- CALL FindSameCityUsersExcludingSelf('ali.j3@example.com', NULL);
 -- CALL GetTopUsersByPurchasesAfterDate('2025-01-01', 5);
+-- CALL GetCancelledTicketsByVehicleType('Airplane');
+-- CALL GetUsersByReportCategory('Comfort');
+-- CALL GetUserPurchasedTickets('alice@example.com','');
+-- CALL GetUsersWithCancelledReservations('jack@example.com','');
+-- CALL GetTicketsByDepartureCity('Los Angeles');
+-- CALL SearchTicketsByTerm('Smith');
+-- CALL SearchTicketsByTerm('Premium');
+-- CALL SearchTicketsByTerm('Los Angeles');
+-- CALL FindSameCityUsersExcludingSelf('alice@example.com' ,'' );
+-- CALL FindSameCityUsersExcludingSelf('' , '1234567890');
+-- CALL FindSameCityUsersExcludingSelf('' , '1234567892');
+-- CALL GetTopUsersByPurchasesAfterDate('2025-05-07', 100 ); 
+-- CALL GetTopUsersByPurchasesAfterDate('2025-04-09 04:24:27' , 3);
+-- CALL GetTopUsersByPurchasesAfterDate('2025-04-09 04:24:27' , 2);
+-- CALL GetCancelledTicketsByVehicleType('Train');
+-- CALL GetCancelledTicketsByVehicleType('Bus');
 -- CALL GetCancelledTicketsByVehicleType('Airplane');
 -- CALL GetUsersByReportCategory('Comfort');
