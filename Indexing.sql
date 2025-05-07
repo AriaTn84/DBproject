@@ -1,8 +1,10 @@
 -- Indexing :
+
 -- Users
 CREATE INDEX idx_users_user_id ON Users(user_id);
 CREATE INDEX idx_users_email ON Users(email);
 CREATE INDEX idx_users_phone ON Users(phone);
+CREATE INDEX idx_users_city ON Users(city_of_residence);
 
 -- Passengers
 CREATE INDEX idx_passengers_user_id ON Passengers(user_id);
