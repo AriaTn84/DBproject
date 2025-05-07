@@ -3,8 +3,8 @@ SELECT u.first_name, u.last_name
 FROM Users u
 JOIN Passengers p USING (user_id)
 WHERE p.user_id NOT IN (
-    SELECT DISTINCT passenger_id
-    FROM Reservation
+    SELECT DISTINCT r.passenger_id
+    FROM Reservation r
 );
     
 -- Q2
@@ -73,29 +73,28 @@ FROM Reservation r
 JOIN 
     Passengers p ON p.user_id = r.passenger_id
 JOIN 
-  Users u ON u.user_id = p.user_id
+	Users u ON u.user_id = p.user_id
 JOIN 
-  Ticket t USING(ticket_id)
+	Ticket t USING(ticket_id)
 JOIN 
-  Location l ON location_id = t.departure_location_id
+	Location l ON location_id = t.departure_location_id
 WHERE 
-  r.reservation_status = 'Confirmed'
+	r.reservation_status = 'Confirmed'
 ORDER BY r.reservation_date DESC
 LIMIT 1;
-
 
 -- Q6
 SELECT u.user_id ,u.email 
 FROM Payment pay
 JOIN 
-  Passengers p ON p.user_id = pay.user_id
+	Passengers p ON p.user_id = pay.user_id
 JOIN 
-  Users u ON u.user_id = p.user_id
+	Users u ON u.user_id = p.user_id
 WHERE 
-  pay.payment_status = 'Completed'
+	pay.payment_status = 'Completed'
 GROUP BY p.user_id
 HAVING SUM(pay.amount) > (
-  SELECT AVG(user_total)
+	SELECT AVG(user_total)
     FROM (
         SELECT SUM(amount) AS user_total
         FROM Payment
@@ -103,7 +102,6 @@ HAVING SUM(pay.amount) > (
         GROUP BY user_id
     ) AS avg_subquery
 );
-
 
 -- Q7
 SELECT vehicle_type , COUNT(*) AS tickets_sold
@@ -138,28 +136,27 @@ FROM Reservation r
 JOIN Passengers p ON r.passenger_id = p.user_id
 JOIN Users u ON u.user_id = p.user_id
 WHERE 
-  r.reservation_status = 'Confirmed'
-  AND r.reservation_date >= NOW() - INTERVAL 7 DAY
+	r.reservation_status = 'Confirmed'
+	AND r.reservation_date >= NOW() - INTERVAL 7 DAY
 GROUP BY p.user_id
 ORDER BY tickets_bought DESC
 LIMIT 3;
 
-
 -- Q9
 SELECT 
-  l.city, COUNT(r.reservation_id) AS tickets_sold
+	l.city, COUNT(r.reservation_id) AS tickets_sold
 FROM 
-  Location l
+	Location l
 LEFT JOIN 
-  Ticket t ON l.location_id = t.departure_location_id
+	Ticket t ON l.location_id = t.departure_location_id
 LEFT JOIN 
-  Reservation r ON t.ticket_id = r.ticket_id AND r.reservation_status = 'Confirmed'
+	Reservation r ON t.ticket_id = r.ticket_id AND r.reservation_status = 'Confirmed'
 WHERE 
-  l.state = 'Tehran'
+	l.state = 'Tehran'
 GROUP BY 
-  l.city
+	l.city
 ORDER BY 
-  tickets_sold DESC;
+	tickets_sold DESC;
     
 -- Q10
 SELECT DISTINCT l.city
@@ -170,8 +167,8 @@ WHERE r.passenger_id = (
     SELECT p.user_id
     FROM Passengers p
     WHERE p.sign_up_date = (
-    SELECT MIN(sign_up_date) 
-    FROM Passengers)
+		SELECT MIN(sign_up_date) 
+		FROM Passengers)
 )
 AND r.reservation_status = 'Confirmed';
 
@@ -192,7 +189,7 @@ FROM
 JOIN 
     Passengers p USING (user_id)
 JOIN 
-    Reservation r ON u.user_id = r.passenger_id
+    Reservation r ON u.user_id = r.passenger_id 
 JOIN 
     Payment pay ON r.reservation_id = pay.reservation_id
 WHERE 
@@ -202,7 +199,7 @@ GROUP BY
 HAVING 
     COUNT(*) >= 2
 ORDER BY 
-  ticket_count;
+	ticket_count;
 
 
 -- Q13
@@ -214,11 +211,10 @@ LEFT JOIN Reservation r ON u.user_id = r.passenger_id
 LEFT JOIN Ticket t ON r.ticket_id = t.ticket_id
 LEFT JOIN Train tr ON t.vehicle_id = tr.vehicle_id
 WHERE 
-  tr.vehicle_id IS NOT NULL OR r.reservation_id IS NULL
+	tr.vehicle_id IS NOT NULL OR r.reservation_id IS NULL
 GROUP BY u.user_id
 HAVING COUNT(r.reservation_id) <= 2
 ORDER BY train_tickets DESC;
-
 
 -- Q14
 SELECT u.user_id , u.phone , u.email
@@ -252,15 +248,15 @@ FROM Reservation r
 JOIN Passengers p ON p.user_id = r.passenger_id
 JOIN Users u ON u.user_id = p.user_id
 JOIN 
-  Ticket t USING (ticket_id)
+	Ticket t USING (ticket_id)
 WHERE 
-  r.reservation_status = 'Confirmed' 
+	r.reservation_status = 'Confirmed' 
     AND YEAR(r.reservation_date) = YEAR(NOW())
-  AND MONTH(r.reservation_date) = MONTH(NOW())
+	AND MONTH(r.reservation_date) = MONTH(NOW())
     AND DAY(r.reservation_date) = DAY(NOW())
     AND HOUR(r.reservation_date) >= HOUR('00')
     AND MINUTE(r.reservation_date) >= MINUTE('00')
-    AND SECOND(r.reservation_date) >= SECOND('00');
+    AND SECOND(r.reservation_date) >= SECOND('00'); 
 
 -- Q16
  WITH TicketSales AS (
@@ -287,6 +283,7 @@ WHERE
 SELECT * FROM TicketSales
 ORDER BY tickets_sold DESC
 LIMIT 1 OFFSET 1;
+
 
 -- Q17
 WITH AdminCancellations AS (
@@ -326,12 +323,14 @@ ORDER BY
     AC.admin_cancel_count DESC
 LIMIT 1;
 
+
+
 -- Q18
 UPDATE Users
 SET last_name = 'Redington'
 WHERE user_id = (
-    SELECT r.passenger_id
-    FROM Reservation r
+SELECT r.passenger_id
+FROM Reservation r
     JOIN Passengers p ON r.passenger_id = p.user_id
     WHERE r.reservation_status = 'Cancelled By Passenger' OR r.reservation_status = 'Cancelled By Admin'
     GROUP BY r.passenger_id
@@ -343,23 +342,22 @@ WHERE user_id = (
 SET SQL_SAFE_UPDATES = 0;
 DELETE FROM Payment
 WHERE reservation_id IN (
-  SELECT reservation_id
-  FROM Reservation r
-  JOIN Users u ON r.passenger_id = u.user_id
-  JOIN Passengers p ON u.user_id = p.user_id
-WHERE r.reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin') AND u.last_name = 'Redington'
+	SELECT reservation_id
+	FROM Reservation r
+	JOIN Users u ON r.passenger_id = u.user_id
+	JOIN Passengers p ON u.user_id = p.user_id
+	WHERE r.reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin') AND u.last_name = 'Redington'
 );
 
 DELETE FROM Reservation
 WHERE reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin')
-  AND passenger_id IN (
-    SELECT user_id
-    FROM Users u
-    JOIN Passengers p USING (user_id)
-    WHERE u.last_name = 'Redington'
-  );
-  
-  
+	AND passenger_id IN (
+		SELECT user_id
+		FROM Users u
+		JOIN Passengers p USING (user_id)
+		WHERE u.last_name = 'Redington'
+);
+
 -- Q20
 DELETE FROM Payment
 WHERE reservation_id IN (
@@ -406,3 +404,4 @@ HAVING
     )
 ORDER BY 
     report_count DESC;
+    
