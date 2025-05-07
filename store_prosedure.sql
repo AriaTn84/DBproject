@@ -50,7 +50,6 @@ BEGIN
             r.reservation_date DESC;
     END IF;
 END //
-
 DELIMITER ;
 
 -- Q2
@@ -77,14 +76,14 @@ BEGIN
         JOIN Admins a ON admin.user_id = a.user_id
         JOIN Reservation r ON a.user_id = r.admin_id
         JOIN Users u ON r.passenger_id = u.user_id
-    WHERE(
-      (admin_email IS NOT NULL AND admin.email = admin_email) OR 
-      (admin_phone IS NOT NULL AND admin.phone = admin_phone)
-      )
-      AND r.reservation_status = 'Cancelled By Admin'
+		WHERE(
+			(admin_email IS NOT NULL AND admin.email = admin_email) OR 
+			(admin_phone IS NOT NULL AND admin.phone = admin_phone)
+			)
+			AND r.reservation_status = 'Cancelled By Admin'
 
         GROUP BY
-            u.user_id
+            u.user_id, user_name, user_email, user_phone
         HAVING
             COUNT(r.reservation_id) > 0
         ORDER BY
@@ -93,6 +92,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 -- Q3
 DELIMITER //
@@ -159,6 +159,7 @@ BEGIN
     ELSE
         SELECT 
             t.ticket_id,
+            CONCAT(u.first_name ,' ',u.last_name) AS full_name,
             CONCAT(dep.city, ', ', dep.country) AS departure,
             CONCAT(arr.city, ', ', arr.country) AS arrival,
             t.departure_date,
@@ -178,18 +179,31 @@ BEGIN
             t.remaining_capacity
         FROM 
             Ticket t
-        JOIN Location dep ON t.departure_location_id = dep.location_id
-        JOIN Location arr ON t.arrival_location_id = arr.location_id
-        JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
-        LEFT JOIN Train tr ON v.vehicle_id = tr.vehicle_id
-        LEFT JOIN Airplane ap ON v.vehicle_id = ap.vehicle_id
-        LEFT JOIN Bus b ON v.vehicle_id = b.vehicle_id
+		JOIN 
+			Reservation r ON t.ticket_id = r.ticket_id
+		JOIN 
+			Passengers p ON p.user_id = r.passenger_id
+		JOIN 
+			Users u ON p.user_id = u.user_id
+        JOIN 
+			Location dep ON t.departure_location_id = dep.location_id
+        JOIN 
+			Location arr ON t.arrival_location_id = arr.location_id
+        JOIN 
+			Vehicle v ON t.vehicle_id = v.vehicle_id
+        LEFT JOIN 	
+			Train tr ON v.vehicle_id = tr.vehicle_id
+        LEFT JOIN 	
+			Airplane ap ON v.vehicle_id = ap.vehicle_id
+        LEFT JOIN 
+			Bus b ON v.vehicle_id = b.vehicle_id
         WHERE 
             dep.city LIKE CONCAT('%', p_search_term, '%') OR
             arr.city LIKE CONCAT('%', p_search_term, '%') OR
             (ap.vehicle_id IS NOT NULL AND ap.airplane_class LIKE CONCAT('%', p_search_term, '%')) OR
             (b.vehicle_id IS NOT NULL AND b.bus_type LIKE CONCAT('%', p_search_term, '%')) OR
-            (tr.vehicle_id IS NOT NULL AND tr.star LIKE CONCAT('%', p_search_term, '%'))
+            (tr.vehicle_id IS NOT NULL AND tr.star LIKE CONCAT('%', p_search_term, '%')) OR
+            CONCAT(u.first_name ,' ',u.last_name) LIKE CONCAT('%', p_search_term, '%')
         ORDER BY 
             t.departure_date,
             t.departure_time;
@@ -213,7 +227,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Either email or phone must be provided';
     ELSE
         SELECT city_of_residence, user_id INTO v_city, v_user_id
-        FROM Users
+        FROM Users 
         WHERE (p_user_email IS NOT NULL AND email = p_user_email)
            OR (p_user_phone IS NOT NULL AND phone = p_user_phone);
         
@@ -239,6 +253,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 -- Q6
 DELIMITER //
@@ -272,7 +287,7 @@ BEGIN
             AND py.payment_status = 'Completed'
             AND r.reservation_status = 'Confirmed'
         GROUP BY 
-            u.user_id
+            u.user_id, user_name, u.email, u.phone
         ORDER BY 
             total_purchases DESC,
             total_spent DESC
@@ -288,12 +303,10 @@ DELIMITER //
 CREATE PROCEDURE GetCancelledTicketsByVehicleType(
     IN p_vehicle_type ENUM('Train', 'Airplane', 'Bus'))
 BEGIN
-    -- Validate input parameter
     IF (p_vehicle_type IS NULL) THEN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Vehicle type must be specified (Train, Airplane, or Bus)';
     ELSE
-        -- Get cancelled tickets for specified vehicle type
         SELECT 
             t.ticket_id,
             CONCAT(u.first_name, ' ', u.last_name) AS passenger_name,
@@ -316,9 +329,18 @@ BEGIN
         WHERE 
             r.reservation_status IN ('Cancelled By Passenger', 'Cancelled By Admin')
             AND (
-                (p_vehicle_type = 'Train' AND EXISTS (SELECT 1 FROM Train WHERE vehicle_id = v.vehicle_id))
-                OR (p_vehicle_type = 'Airplane' AND EXISTS (SELECT 1 FROM Airplane WHERE vehicle_id = v.vehicle_id))
-                OR (p_vehicle_type = 'Bus' AND EXISTS (SELECT 1 FROM Bus WHERE vehicle_id = v.vehicle_id))
+                (p_vehicle_type = 'Train' AND EXISTS (
+                SELECT 1 
+					FROM Train t
+					WHERE t.vehicle_id = v.vehicle_id))
+                OR (p_vehicle_type = 'Airplane' AND EXISTS (
+                SELECT 1
+					FROM Airplane a
+                    WHERE a.vehicle_id = v.vehicle_id))
+                OR (p_vehicle_type = 'Bus' AND EXISTS (
+                SELECT 1 	
+					FROM Bus b 
+                    WHERE b.vehicle_id = v.vehicle_id))
             )
         ORDER BY 
             t.departure_date DESC, 
@@ -327,6 +349,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 -- Q8
 DELIMITER //
@@ -350,9 +373,10 @@ BEGIN
         WHERE 
             r.category = p_report_category
         GROUP BY 
-            u.user_id
+            u.user_id, user_name, u.email, u.phone
         ORDER BY 
-            report_count DESC;
+            report_count DESC
+		LIMIT 1;
     END IF;
 END //
 
