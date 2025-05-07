@@ -357,30 +357,3 @@ BEGIN
 END //
 
 DELIMITER ;
-
-
--- --------------------------------------
--- CALL GetUserPurchasedTickets('user@example.com', NULL);
--- CALL GetUsersWithCancelledReservations('sadra.j3@example.com', NULL);
--- CALL GetTicketsByDepartureCity('Tehran');
--- CALL SearchTicketsByTerm('Business');
--- CALL FindSameCityUsersExcludingSelf('ali.j3@example.com', NULL);
--- CALL GetTopUsersByPurchasesAfterDate('2025-01-01', 5);
--- CALL GetCancelledTicketsByVehicleType('Airplane');
--- CALL GetUsersByReportCategory('Comfort');
--- CALL GetUserPurchasedTickets('alice@example.com','');
--- CALL GetUsersWithCancelledReservations('jack@example.com','');
--- CALL GetTicketsByDepartureCity('Los Angeles');
--- CALL SearchTicketsByTerm('Smith');
--- CALL SearchTicketsByTerm('Premium');
--- CALL SearchTicketsByTerm('Los Angeles');
--- CALL FindSameCityUsersExcludingSelf('alice@example.com' ,'' );
--- CALL FindSameCityUsersExcludingSelf('' , '1234567890');
--- CALL FindSameCityUsersExcludingSelf('' , '1234567892');
--- CALL GetTopUsersByPurchasesAfterDate('2025-05-07', 100 ); 
--- CALL GetTopUsersByPurchasesAfterDate('2025-04-09 04:24:27' , 3);
--- CALL GetTopUsersByPurchasesAfterDate('2025-04-09 04:24:27' , 2);
--- CALL GetCancelledTicketsByVehicleType('Train');
--- CALL GetCancelledTicketsByVehicleType('Bus');
--- CALL GetCancelledTicketsByVehicleType('Airplane');
--- CALL GetUsersByReportCategory('Comfort');
