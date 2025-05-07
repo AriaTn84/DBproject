@@ -86,3 +86,42 @@ This repository currently covers Phase 1 and Phase 2, focusing on the database d
 ```
 
 ---
+
+## Phase 1: ER Diagram and Database Design
+
+### Objectives
+- Design an ER Diagram representing all entities, relationships, and constraints.
+- Create initial table structures adhering to the **3rd Normal Form (3NF)**.
+- Define primary keys, foreign keys, unique constraints, and check constraints.
+- Ensure the database is optimized to avoid redundant data and inconsistencies.
+
+### Key Models
+- **User**: Stores user information (name, email/phone, role, city, hashed password, etc.).
+- **Ticket**: Stores ticket details (transport type, route, date, price, capacity, etc.).
+- **Reservation**: Manages user reservations (user ID, ticket ID, status, expiration time).
+- **Payment**: Tracks payment transactions (user ID, reservation ID, amount, status).
+- **Report**: Stores user-reported issues (user ID, ticket/reservation ID, report type, status).
+- **Transport Details**:
+  - **TrainDetails**: Train-specific features (stars, amenities, private coupe option).
+  - **FlightDetails**: Flight-specific features (airline, class, stops, amenities).
+  - **BusDetails**: Bus-specific features (company, type, seat layout, amenities).
+
+### ER Diagram
+The ER Diagram is located in `database/er_diagram/er_diagram.pdf`. It includes:
+- **Entities**: User, Ticket, Reservation, Payment, Report, TrainDetails, FlightDetails, BusDetails.
+- **Relationships**:
+  - User → Reservation (1:N, one user can have multiple reservations).
+  - Ticket → Reservation (1:N, one ticket can be reserved multiple times).
+  - Reservation → Payment (1:1, each reservation has one payment).
+  - Ticket → Transport Details (1:1, each ticket links to specific transport details).
+- **Constraints**:
+  - Unique email/phone for users.
+  - Non-negative ticket prices.
+  - Valid reservation expiration times.
+
+### Outputs
+- `AlibabaDatabase.sql`: SQL script for table creation.
+- `DataBAse_Alibaba-page-drawio.png`: ER diagram png file.
+- `DataBAse_Alibaba-page-drawio.xml`: ER diagram xml file.
+
+---
