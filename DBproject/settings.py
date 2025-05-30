@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1t+9)0za$!m%rwx1q$!6yfzewg3l5f#3a9w04pcijqdm^_uck*'
+SECRET_KEY = 'django-insecure-z8_56r8faf&-btdt$kjatreae6o0mj2dok%f=(3fl_&46utla*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,8 +76,15 @@ WSGI_APPLICATION = 'DBproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'raahi_db',
+        'USER': 'root',
+        'PASSWORD': 'Mobin@2005',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        }
     }
 }
 
@@ -122,3 +129,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mobinfallahi0@gmail.com'
+EMAIL_HOST_PASSWORD = 'lzsb lcwm cddm kyop'
+DEFAULT_FROM_EMAIL = 'mobinfallahi0@gmail.com'
