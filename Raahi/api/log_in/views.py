@@ -48,8 +48,8 @@ def send_otp(request):
     try:
         redis_client.setex(f"otp:{email}", 300, otp)
         send_mail(
-            subject='Your OTP Code',
-            message=f'Your OTP code is {otp}. It is valid for 5 minutes.',
+            subject='Your Verify Code',
+            message=f'Your verify code is {otp}. It is valid for 5 minutes.',
             from_email='mobinfallahi0@gmail.com', #
             recipient_list=[email],
             fail_silently=False,

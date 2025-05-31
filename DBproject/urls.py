@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('api/log-in/', include('Raahi.api.log_in.urls')),
+    path('api/sign-up/', include('Raahi.api.user_signup.urls'))
 ]
