@@ -21,10 +21,8 @@ def get_user_profile(request):
     redis_client = get_redis_connection()
     if redis_client:
         try:
-            # 1. First, check the cache
             cached_user = redis_client.hgetall(f"user:{user_id}")
             if cached_user:
-                # Cache Hit: Data found in Redis
                 return JsonResponse({
                     'message': 'User profile fetched from cache successfully',
                     'data': cached_user,
@@ -32,9 +30,7 @@ def get_user_profile(request):
                 })
         except Exception as e:
             print(f"Redis error: {e}")
-            # Continue to fetch from DB if Redis fails
 
-    # 2. Cache Miss or Redis connection failed: Fetch from database
     connection = get_db_connection()
     if connection is None:
         return JsonResponse({'error': 'Database connection failed'}, status=500)
@@ -49,10 +45,8 @@ def get_user_profile(request):
         if not user:
             return JsonResponse({'error': 'User not found'}, status=404)
 
-        # 3. Populate the cache for next time
         if redis_client:
             try:
-                # Convert date object to string if it exists
                 if user.get('date_of_birth'):
                     user['date_of_birth'] = str(user['date_of_birth'])
 
