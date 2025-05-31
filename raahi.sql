@@ -5,6 +5,7 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     phone VARCHAR(20) UNIQUE NOT NULL,
     pass VARCHAR(100) NOT NULL,
+    dateـofـbirth DATE DEFAULT NULL,
     city_of_residence VARCHAR(100)
 );
 
