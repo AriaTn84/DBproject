@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -29,5 +28,5 @@ urlpatterns = [
     path('api/reservation/cancel/', include('Raahi.api.cancel_reservation.urls')),
     path('api/get-ticket-details/', include('Raahi.api.get_ticket_details.urls')),
     path('api/get-bookings/', include('Raahi.api.get_bookings.urls')),
-
+    path('api/tickets/search/', include('Raahi.api.search_tickets.urls')),
 ]

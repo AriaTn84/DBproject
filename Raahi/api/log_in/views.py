@@ -110,7 +110,7 @@ def verify_otp(request):
                 access_token_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
                 lifetime_in_seconds = int(access_token_lifetime.total_seconds())
 
-                redis_client.serex(f"user_session:{email}", lifetime_in_seconds, "active")
+                redis_client.serex(f"user_session:{email}", lifetime_in_seconds, "Active")
 
                 return JsonResponse({
                     'message': 'OTP verified successfully. User is logged in.',

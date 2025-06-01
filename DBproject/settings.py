@@ -78,7 +78,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'raahi_db',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': 'Mobin@2005',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
