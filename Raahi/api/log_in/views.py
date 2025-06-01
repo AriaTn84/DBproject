@@ -102,15 +102,25 @@ def verify_otp(request):
                 if not user:
                     return JsonResponse({'error': 'User not found after OTP verification'}, status=404)
 
+                user_id = user['user_id']
+
+                # Check if the user is a passenger and update their status if 'Deactive'
+                cursor.execute("SELECT account_status FROM Passengers WHERE user_id = %s", (user_id,))
+                passenger = cursor.fetchone()
+
+                if passenger and passenger['account_status'] == 'Deactive':
+                    cursor.execute("UPDATE Passengers SET account_status = 'Active' WHERE user_id = %s", (user_id,))
+                    connection.commit()
+
                 refresh = RefreshToken()
-                refresh['user_id'] = user['user_id']
+                refresh['user_id'] = user_id
                 refresh['email'] = email
                 redis_client.sadd("otp_users", email)
 
                 access_token_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
                 lifetime_in_seconds = int(access_token_lifetime.total_seconds())
 
-                redis_client.serex(f"user_session:{email}", lifetime_in_seconds, "Active")
+                redis_client.setex(f"user_session:{email}", lifetime_in_seconds, "Active")
 
                 return JsonResponse({
                     'message': 'OTP verified successfully. User is logged in.',

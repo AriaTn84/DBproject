@@ -127,3 +127,12 @@ CREATE TABLE Reports (
     FOREIGN KEY (passenger_id) REFERENCES Passengers(user_id),
     FOREIGN KEY (admin_id) REFERENCES Admins(user_id)
 );
+
+CREATE TABLE Wallet (
+    wallet_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL UNIQUE,
+    balance DECIMAL(10, 2) DEFAULT 0.00,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    CONSTRAINT chk_balance CHECK (balance >= 0)
+);

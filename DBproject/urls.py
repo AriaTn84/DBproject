@@ -29,4 +29,5 @@ urlpatterns = [
     path('api/get-ticket-details/', include('Raahi.api.get_ticket_details.urls')),
     path('api/get-bookings/', include('Raahi.api.get_bookings.urls')),
     path('api/tickets/search/', include('Raahi.api.search_tickets.urls')),
+    path('api/reservation/cancel-penalty/', include('Raahi.api.cancel_with_penalty.urls')),
 ]
