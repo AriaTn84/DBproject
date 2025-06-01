@@ -56,7 +56,7 @@ def signup_user(request):
             INSERT INTO Passengers (user_id, account_status)
             VALUES (%s, %s)
         """
-        passenger_data = (new_user_id, 'Active')
+        passenger_data = (new_user_id, 'Deactive')
         cursor.execute(passenger_insert_query, passenger_data)
 
         connection.commit()
