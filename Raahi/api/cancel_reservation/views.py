@@ -52,7 +52,7 @@ def cancel_reservation(request):
         start_of_day = datetime.combine(ticket['departure_date'], time.min)
         departure_datetime = start_of_day + ticket['departure_time']
 
-        if departure_datetime < datetime.now():       # relativedelta(years=2)
+        if departure_datetime < datetime.now():
             connection.rollback()
             return JsonResponse({'error': 'Cannot cancel a reservation for a past trip'}, status=400)
 
