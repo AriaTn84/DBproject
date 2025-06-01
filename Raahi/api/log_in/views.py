@@ -6,8 +6,8 @@ from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from ...redis_client import get_redis_connection
 from ...db import get_db_connection
-# Import RefreshToken for generating JWTs
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.settings import api_settings
 
 
 def generate_otp(length=6):
@@ -107,6 +107,11 @@ def verify_otp(request):
                 refresh['email'] = email
                 redis_client.sadd("otp_users", email)
 
+                access_token_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
+                lifetime_in_seconds = int(access_token_lifetime.total_seconds())
+
+                redis_client.serex(f"user_session:{email}", lifetime_in_seconds, "active")
+
                 return JsonResponse({
                     'message': 'OTP verified successfully. User is logged in.',
                     'refresh': str(refresh),
@@ -134,8 +139,9 @@ def get_otp_users(request):
         return JsonResponse({'error': 'Redis connection failed'}, status=500)
 
     try:
-        otp_users = redis_client.smembers("otp_users")
-        otp_users_list = [user.decode('utf-8') for user in otp_users] if otp_users else []
-        return JsonResponse({'otp_users': otp_users_list})
+        session_keys = redis_client.scan_iter("user_session:*")
+        active_users_list = [key.split(':', 1)[1] for key in session_keys]
+
+        return JsonResponse({'otp_users': active_users_list})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
