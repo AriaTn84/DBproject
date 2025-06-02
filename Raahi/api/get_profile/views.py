@@ -1,22 +1,40 @@
 import json
+from tokenize import TokenError
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework_simplejwt.tokens import AccessToken
+
 from ...db import get_db_connection
 from ...redis_client import get_redis_connection
 
 
 @csrf_exempt
 def get_user_profile(request):
-    if request.method != 'POST':
+    if request.method != 'GET':
         return JsonResponse({'error': 'This method is not allowed'}, status=405)
 
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Authorization header is missing or invalid'}, status=401)
+
+    token_str = auth_header.split(' ')[1]
     try:
-        data = json.loads(request.body)
-        user_id = data.get('user_id')
-        if not user_id:
-            return JsonResponse({'error': 'user_id is a required field'}, status=400)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON format in request body'}, status=400)
+        token = AccessToken(token_str)
+        token.verify()
+        user_id = token['user_id']
+    except (InvalidToken, TokenError) as e:
+        return JsonResponse({'error': 'Token is invalid or expired'}, status=401)
+    except Exception as e:
+        return JsonResponse({'error': f'An unexpected error occurred: {str(e)}'}, status=500)
+    # try:
+    #     data = json.loads(request.body)
+    #     user_id = data.get('user_id')
+    #     if not user_id:
+    #         return JsonResponse({'error': 'user_id is a required field'}, status=400)
+    # except json.JSONDecodeError:
+    #     return JsonResponse({'error': 'Invalid JSON format in request body'}, status=400)
 
     redis_client = get_redis_connection()
     if redis_client:
