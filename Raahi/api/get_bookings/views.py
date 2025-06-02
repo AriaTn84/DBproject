@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from ...db import get_db_connection
 from datetime import date, timedelta
 from decimal import Decimal
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 
 def serialize_data(data):
@@ -18,6 +20,20 @@ def serialize_data(data):
 def get_user_bookings(request):
     if request.method != 'GET':
         return JsonResponse({'error': 'This method is not allowed'}, status=405)
+
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Authorization header is missing or invalid'}, status=401)
+
+    try:
+        token_str = auth_header.split(' ')[1]
+        token = AccessToken(token_str)
+        token.verify()
+        user_id = token['user_id']
+    except (InvalidToken, TokenError) as e:
+        return JsonResponse({'error': 'Token is invalid or expired'}, status=401)
+    except Exception as e:
+        return JsonResponse({'error': f'An unexpected error occurred: {str(e)}'}, status=500)
 
     status_filter = request.GET.get('status', None)
 
@@ -48,9 +64,8 @@ def get_user_bookings(request):
                          JOIN
                      Location AS ArrL ON T.arrival_location_id = ArrL.location_id
                 WHERE R.passenger_id = %s
-                  AND R.reservation_status != 'Pending' \
+                  AND R.reservation_status != 'Pending'
                 """
-
 
         if status_filter == 'future':
             query += " AND R.reservation_status = 'Confirmed' AND T.departure_date >= CURDATE()"
@@ -61,13 +76,6 @@ def get_user_bookings(request):
 
         query += " ORDER BY T.departure_date DESC"
 
-        try:
-            data = json.loads(request.body)
-            user_id = data.get('user_id')
-            if not user_id:
-                return JsonResponse({'error': 'USER ID is required'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format in request body'}, status=400)
         params = [user_id]
 
         cursor.execute(query, params)
