@@ -131,6 +131,7 @@ CREATE TABLE Reports (
 ALTER TABLE Reports
 ADD COLUMN admin_response TEXT;
 
+
 CREATE TABLE Wallet (
     wallet_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL UNIQUE,
