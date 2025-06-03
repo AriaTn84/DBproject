@@ -118,7 +118,7 @@ CREATE TABLE Reports (
     report_id INT PRIMARY KEY AUTO_INCREMENT,
     ticket_id INT,
     passenger_id INT NOT NULL,
-    admin_id INT NOT NULL,
+    admin_id INT,
     category VARCHAR(100),
     report_description TEXT,
     report_status ENUM('Open', 'Closed', 'Pending'),
