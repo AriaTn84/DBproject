@@ -128,6 +128,9 @@ CREATE TABLE Reports (
     FOREIGN KEY (admin_id) REFERENCES Admins(user_id)
 );
 
+ALTER TABLE Reports
+ADD COLUMN admin_response TEXT;
+
 CREATE TABLE Wallet (
     wallet_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL UNIQUE,
