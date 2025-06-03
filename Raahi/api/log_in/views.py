@@ -104,7 +104,6 @@ def verify_otp(request):
 
                 user_id = user['user_id']
 
-                # Check if the user is a passenger and update their status if 'Deactive'
                 cursor.execute("SELECT account_status FROM Passengers WHERE user_id = %s", (user_id,))
                 passenger = cursor.fetchone()
 
