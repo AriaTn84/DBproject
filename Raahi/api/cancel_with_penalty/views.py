@@ -69,9 +69,12 @@ def cancel_with_penalty(request):
             connection.rollback()
             return JsonResponse({'error': 'You are not authorized for this reservation'}, status=403)
 
-        if reservation['reservation_status'] in ['Cancelled By Passenger', 'Cancelled By Admin']:
+        if reservation['reservation_status'] != 'Confirmed':
             connection.rollback()
-            return JsonResponse({'error': 'This reservation has already been cancelled'}, status=400)
+            if reservation['reservation_status'] in ['Cancelled By Passenger', 'Cancelled By Admin']:
+                return JsonResponse({'error': 'This reservation has already been cancelled'}, status=400)
+            else:
+                return JsonResponse({'error': 'Only confirmed reservations can be cancelled.'}, status=400)
 
         departure_datetime = datetime.combine(reservation['departure_date'], datetime.min.time()) + reservation[
             'departure_time']
