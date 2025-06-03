@@ -228,6 +228,9 @@ VALUES (1, 1, 'Confirmed', '2023-01-20'),
        (14, 2, 'Confirmed', '2025-05-4'),
        (2, 2, 'Confirmed', '2024-01-20');
 
+INSERT INTO Reservation (ticket_id, passenger_id, reservation_status, reservation_date)
+VALUES (9, 23, 'Confirmed', '2025-06-22');
+
 INSERT INTO Payment (reservation_id, user_id, payment_status, amount, payment_method)
 VALUES (1, 1, 'Completed', 120.50, 'Credit Card'),
        (2, 2, 'Pending', 75.00, 'PayPal'),
@@ -283,6 +286,8 @@ VALUES (1, 1, 7, 'Delay', 'Departure was delayed by 45 minutes without proper an
        (11, 18, 21, 'Pricing', 'Charged extra fees not mentioned at time of booking', 'Open'),
        (10, 4, 22, 'Cancelled by admin', 'Hazard in transaction', 'Closed');
 
+INSERT INTO Reports (ticket_id, passenger_id, admin_id, category, report_description, report_status)
+VALUES  (9, 23, 'null', 'Payment problem', 'Money was withdrawn from my account but the ticket was not booked.', 'Open');
 
 UPDATE Reservation
 SET admin_id = 7
