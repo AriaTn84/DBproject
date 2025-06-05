@@ -140,3 +140,6 @@ CREATE TABLE Wallet (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     CONSTRAINT chk_balance CHECK (balance >= 0)
 );
+
+ALTER TABLE Reservation MODIFY COLUMN reservation_status
+ENUM('Pending', 'Confirmed', 'Cancelled By Passenger', 'Cancelled By Admin', 'Expired') NOT NULL;
