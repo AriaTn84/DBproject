@@ -51,6 +51,9 @@ VALUES (7, 'Support Agent'),
        (21, 'Support Agent'),
        (22, 'Support Agent');
 
+INSERT INTO Admins (user_id, admin_role)
+VALUES (24, 'Support Agent');
+
 INSERT INTO Vehicle (company_name)
 VALUES ('Greyhound'),
        ('Amtrak'),
