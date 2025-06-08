@@ -74,7 +74,8 @@ CREATE TABLE Payment (
     FOREIGN KEY (reservation_id) REFERENCES Reservation(reservation_id),
     FOREIGN KEY (user_id) REFERENCES Passengers(user_id)
 );
-
+ALTER TABLE Payment
+MODIFY payment_status ENUM('Pending', 'Completed', 'Failed', 'Refunded') NOT NULL;
 -- -----------------------
 CREATE TABLE Train (
     vehicle_id INT PRIMARY KEY,
