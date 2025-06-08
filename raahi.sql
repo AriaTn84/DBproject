@@ -76,6 +76,10 @@ CREATE TABLE Payment (
 );
 ALTER TABLE Payment
 MODIFY payment_status ENUM('Pending', 'Completed', 'Failed', 'Refunded') NOT NULL;
+
+ALTER TABLE Payment
+MODIFY payment_status ENUM('Pending', 'Completed', 'Failed') NOT NULL;
+
 -- -----------------------
 CREATE TABLE Train (
     vehicle_id INT PRIMARY KEY,
