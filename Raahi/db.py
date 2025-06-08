@@ -7,7 +7,7 @@ def get_db_connection():
             host='localhost',
             database='raahi_db',
             user='root',
-            password='1234'
+            password=''
         )
         if connection.is_connected():
             print("Connected to MySQL database")
