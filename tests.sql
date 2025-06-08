@@ -285,13 +285,13 @@ INSERT INTO Reports (ticket_id, passenger_id, admin_id, category, report_descrip
 VALUES (1, 1, 7, 'Delay', 'Departure was delayed by 45 minutes without proper announcement', 'Open'),
        (2, 2, 8, 'Cleanliness', 'Seat was dirty with food stains from previous passenger', 'Pending'),
        (4, 4, 9, 'Comfort', 'Air conditioning was not working during the entire trip', 'Open'),
-       (6, 6, 10, 'Safety', 'Luggage compartment door was not properly secured during travel', 'Closed'),
+       (6, 6, 10, 'Safety', 'Luggage compartment door was not properly secured during travel', 'Open'),
        (9, 3, 14, 'Service', 'Staff was rude when asked for assistance with luggage', 'Pending'),
        (4, 2, 16, 'Facilities', 'Promised WiFi service was not available on board', 'Open'),
-       (9, 11, 19, 'Schedule', 'Departure time changed last minute without notification', 'Closed'),
+       (9, 11, 19, 'Schedule', 'Departure time changed last minute without notification', 'Open'),
        (10, 18, 20, 'Comfort', 'Seat recliner mechanism was broken', 'Pending'),
        (11, 18, 21, 'Pricing', 'Charged extra fees not mentioned at time of booking', 'Open'),
-       (10, 4, 22, 'Cancelled by admin', 'Hazard in transaction', 'Closed');
+       (10, 4, 22, 'Cancelled by admin', 'Hazard in transaction', 'Open');
 
 INSERT INTO Reports (ticket_id, passenger_id, category, report_description, report_status)
 VALUES  (9, 23, 'Payment problem', 'Money was withdrawn from my account but the ticket was not booked.', 'Open');
