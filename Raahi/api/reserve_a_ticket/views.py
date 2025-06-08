@@ -94,6 +94,14 @@ def create_reservation(request):
 
         connection.commit()
 
+        try:
+            redis_conn = get_redis_connection()
+            redis_key = f"reservation_expiry:{reservation_id}"
+            redis_conn.setex(redis_key, int(RESERVATION_EXPIRY_MINUTES*60) , str(ticket_id))
+            print(f"Reservation {reservation_id} key set in Redis with {RESERVATION_EXPIRY_MINUTES} min TTL.")
+        except Exception as e:
+            print(f"Could not set reservation key in Redis: {e}")
+
         payment_due_time = reservation_time + timedelta(minutes=RESERVATION_EXPIRY_MINUTES)
         return JsonResponse({
             'message': 'Ticket successfully reserved. Please complete payment within the time limit.',
