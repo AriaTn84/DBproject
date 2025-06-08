@@ -5,6 +5,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
 from datetime import datetime, timedelta
 from Raahi.db import get_db_connection
+from Raahi.redis_client import get_redis_connection
 
 RESERVATION_EXPIRY_MINUTES = 10
 
@@ -61,8 +62,8 @@ def create_reservation(request):
         remaining_capacity_db = ticket_details['remaining_capacity']
         ticket_cost = ticket_details['cost']
 
-        if remaining_capacity_db < number_of_seats_requested:  # number_of_seats_requested همیشه ۱ است
-            return JsonResponse({'error': 'Not enough capacity available for this ticket.'}, status=409)  # 409 Conflict
+        if remaining_capacity_db < number_of_seats_requested:
+            return JsonResponse({'error': 'Not enough capacity available for this ticket.'}, status=409)
 
         new_remaining_capacity = remaining_capacity_db - number_of_seats_requested
 
