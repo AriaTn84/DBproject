@@ -281,6 +281,103 @@ def confirm_reservation_view(request, reservation_id):
         if cursor: cursor.close()
         if connection and connection.is_connected(): connection.close()
 
+@csrf_exempt
+def cancel_reservation_by_admin_view(request, reservation_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'This method is not allowed. Please use POST.'}, status=405)
+
+    admin_user_id, error_response = _verify_admin_and_get_id(request)
+    if error_response:
+        return error_response
+
+    connection = None
+    cursor = None
+    try:
+        connection = get_db_connection()
+        if connection is None:
+            return JsonResponse({'error': 'Database connection failed.'}, status=500)
+        connection.autocommit = False
+        cursor = connection.cursor(dictionary=True)
+        query_get_reservation = "SELECT passenger_id, reservation_status FROM Reservation WHERE reservation_id = %s FOR UPDATE"
+        cursor.execute(query_get_reservation, (reservation_id,))
+        reservation_to_cancel = cursor.fetchone()
+
+        if not reservation_to_cancel:
+            return JsonResponse({'error': f'Reservation with ID {reservation_id} not found.'}, status=404)
+
+        passenger_id_of_reservation = reservation_to_cancel['passenger_id']
+        current_reservation_status = reservation_to_cancel['reservation_status']
+
+        cancelled_statuses = ['Cancelled By Passenger', 'Cancelled By Admin']
+        if current_reservation_status in cancelled_statuses:
+            return JsonResponse({'message': f'Reservation ID {reservation_id} is already cancelled.'}, status=200)
+
+        query_payment = """
+                        SELECT payment_id, amount, payment_status
+                        FROM Payment
+                        WHERE reservation_id = %s
+                        ORDER BY payment_date DESC
+                        LIMIT 1 \
+                        FOR \
+                        UPDATE \
+                        """
+        cursor.execute(query_payment, (reservation_id,))
+        payment_info = cursor.fetchone()
+
+        refund_amount = 0
+        payment_id_to_update = None
+
+        if payment_info and payment_info['payment_status'] == 'Completed':
+            refund_amount = payment_info['amount']
+            payment_id_to_update = payment_info['payment_id']
+        else:
+            pass
+
+        new_status = 'Cancelled By Admin'
+        query_cancel_reservation = "UPDATE Reservation SET reservation_status = %s WHERE reservation_id = %s"
+        cursor.execute(query_cancel_reservation, (new_status, reservation_id))
+
+        if cursor.rowcount == 0:
+            connection.rollback()
+            return JsonResponse({'error': 'Failed to update reservation status.'}, status=500)
+        if payment_id_to_update:
+            query_update_payment = "UPDATE Payment SET payment_status = 'Refunded' WHERE payment_id = %s"
+            cursor.execute(query_update_payment, (payment_id_to_update,))
+            if cursor.rowcount == 0:
+                connection.rollback()
+                return JsonResponse(
+                    {'error': f'Failed to update payment status for payment ID {payment_id_to_update}.'}, status=500)
+        if refund_amount > 0:
+            query_update_wallet = "UPDATE Wallet SET balance = balance + %s WHERE user_id = %s"
+            cursor.execute(query_update_wallet, (refund_amount, passenger_id_of_reservation))
+            if cursor.rowcount == 0:
+                connection.rollback()
+                return JsonResponse(
+                    {'error': f'Could not find wallet for user ID {passenger_id_of_reservation} to process refund.'},
+                    status=404)
+        connection.commit()
+
+        return JsonResponse({
+            'message': f'Reservation ID {reservation_id} has been successfully cancelled by admin {admin_user_id}.',
+            'new_status': new_status,
+            'refunded_amount': float(refund_amount)
+        }, status=200)
+
+    except MySQLError as db_error:
+        if connection:
+            connection.rollback()
+        return JsonResponse({'error': f'Database error during reservation cancellation: {str(db_error)}'}, status=500)
+    except Exception as e:
+        if connection:
+            connection.rollback()
+        return JsonResponse({'error': f'An unexpected error occurred: {str(e)}'}, status=500)
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+
+
 
 
 
