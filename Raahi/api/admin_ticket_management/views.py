@@ -341,7 +341,7 @@ def cancel_reservation_by_admin_view(request, reservation_id):
             connection.rollback()
             return JsonResponse({'error': 'Failed to update reservation status.'}, status=500)
         if payment_id_to_update:
-            query_update_payment = "UPDATE Payment SET payment_status = 'Refunded' WHERE payment_id = %s"
+            query_update_payment = "UPDATE Payment SET payment_status = 'Failed' WHERE payment_id = %s"
             cursor.execute(query_update_payment, (payment_id_to_update,))
             if cursor.rowcount == 0:
                 connection.rollback()
