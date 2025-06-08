@@ -240,7 +240,7 @@ VALUES (9, 23, 'Confirmed', '2025-06-22');
 
 INSERT INTO Payment (reservation_id, user_id, payment_status, amount, payment_method)
 VALUES (1, 1, 'Completed', 120.50, 'Credit Card'),
-       (2, 2, 'Pending', 75.00, 'PayPal'),
+       (2, 2, 'Completed', 75.00, 'PayPal'),
        (3, 3, 'Failed', 199.99, 'Bank Transfer'),
        (4, 4, 'Completed', 45.00, 'Credit Card'),
        (5, 5, 'Pending', 89.00, 'PayPal'),
