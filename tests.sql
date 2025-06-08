@@ -22,6 +22,9 @@ VALUES ('Alice', 'Smith', 'mobin.fallahi.1384@gmail.com', '1234567890', 'pass123
        ('Amir Hossein', 'Bagheri', 'amirhossein.j3@example.com', '2234567890', 'hashedpass11', 'Tehran'),
        ('Sadra', 'Soltani', 'sadra.j3@example.com', '3234567897', 'hashedpass8', 'Mashhad');
 
+INSERT INTO Users (first_name, last_name, email, phone, pass, city_of_residence)
+    VALUES ('Zahra', 'Aghaei', 'zahra.aghaee.1382@gmail.com', '09962789650', 'hashedpass88', 'Takestan'),
+            ('Fatemeh', 'Aghaei', 'aghaeizhr@yahoo.com', '09960690230', 'fati82', 'Takestan');
 
 INSERT INTO Passengers (user_id, account_status)
 VALUES (1, 'Active'),
@@ -34,6 +37,7 @@ VALUES (1, 'Active'),
        (12, 'Active'),
        (13, 'Active'),
        (15, 'Active'),
+       (23, 'Active'),
        (17, 'Deactive');
 
 INSERT INTO Passengers (user_id, sign_up_date, account_status)
@@ -289,8 +293,8 @@ VALUES (1, 1, 7, 'Delay', 'Departure was delayed by 45 minutes without proper an
        (11, 18, 21, 'Pricing', 'Charged extra fees not mentioned at time of booking', 'Open'),
        (10, 4, 22, 'Cancelled by admin', 'Hazard in transaction', 'Closed');
 
-INSERT INTO Reports (ticket_id, passenger_id, admin_id, category, report_description, report_status)
-VALUES  (9, 23, 'null', 'Payment problem', 'Money was withdrawn from my account but the ticket was not booked.', 'Open');
+INSERT INTO Reports (ticket_id, passenger_id, category, report_description, report_status)
+VALUES  (9, 23, 'Payment problem', 'Money was withdrawn from my account but the ticket was not booked.', 'Open');
 
 UPDATE reports
 SET admin_id = NULL;
