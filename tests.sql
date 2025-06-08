@@ -296,7 +296,7 @@ VALUES (1, 1, 7, 'Delay', 'Departure was delayed by 45 minutes without proper an
 INSERT INTO Reports (ticket_id, passenger_id, category, report_description, report_status)
 VALUES  (9, 23, 'Payment problem', 'Money was withdrawn from my account but the ticket was not booked.', 'Open');
 
-UPDATE reports
+UPDATE Reports
 SET admin_id = NULL;
 
 
