@@ -137,20 +137,3 @@ def verify_otp(request):
             return JsonResponse({'error': 'Invalid OTP'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-
-
-def get_otp_users(request):
-    if request.method != 'GET':
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-    redis_client = get_redis_connection()
-    if redis_client is None:
-        return JsonResponse({'error': 'Redis connection failed'}, status=500)
-
-    try:
-        session_keys = redis_client.scan_iter("user_session:*")
-        active_users_list = [key.split(':', 1)[1] for key in session_keys]
-
-        return JsonResponse({'otp_users': active_users_list})
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
