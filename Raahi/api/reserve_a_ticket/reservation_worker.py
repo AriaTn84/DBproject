@@ -4,7 +4,7 @@ import sys
 import os
 import mysql.connector
 
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 if project_path not in sys.path:
     sys.path.append(project_path)
 
@@ -43,6 +43,11 @@ def expire_reservation(reservation_id):
             cursor.execute(
                 "UPDATE Ticket SET remaining_capacity = remaining_capacity + 1 WHERE ticket_id = %s",
                 (ticket_id,)
+            )
+
+            cursor.execute(
+                "UPDATE Payment SET payment_status = 'Failed' WHERE reservation_id = %s",
+                (reservation_id,)
             )
 
             db_connection.commit()
