@@ -59,6 +59,13 @@ def signup_user(request):
         passenger_data = (new_user_id, 'Deactive')
         cursor.execute(passenger_insert_query, passenger_data)
 
+        wallet_insert_query = """
+                              INSERT INTO Wallet (user_id, balance)
+                              VALUES (%s, %s) 
+                              """
+        wallet_data = (new_user_id, 0.00)
+        cursor.execute(wallet_insert_query, wallet_data)
+
         connection.commit()
 
         refresh = RefreshToken()
