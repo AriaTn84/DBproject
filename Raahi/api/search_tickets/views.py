@@ -23,7 +23,7 @@ def search_tickets(request):
     departure_city = request.GET.get('departure_city')
     arrival_city = request.GET.get('arrival_city')
     departure_date = request.GET.get('departure_date')
-    vehicle_type = request.GET.get('vehicle_type')  # Optional: 'Airplane', 'Train', 'Bus'
+    vehicle_type = request.GET.get('vehicle_type')
 
     if not all([departure_city, arrival_city, departure_date]):
         return JsonResponse({'error': 'departure_city, arrival_city, and departure_date are required parameters.'},
@@ -62,8 +62,8 @@ def search_tickets(request):
                 T.cost,
                 T.remaining_capacity,
                 V.company_name,
-                origin.city AS departure_city, 
-                destination.city AS arrival_city, 
+                origin.city AS departure_city,
+                destination.city AS arrival_city,
                 CASE
                     WHEN A.vehicle_id IS NOT NULL THEN 'Airplane'
                     WHEN TR.vehicle_id IS NOT NULL THEN 'Train'
@@ -90,9 +90,12 @@ def search_tickets(request):
                 AND T.departure_date = %s
         """
 
-        if vehicle_type:
-            query += " HAVING vehicle_type = %s"
-            params.append(vehicle_type)
+        if vehicle_type == 'Airplane':
+            query += " AND A.vehicle_id IS NOT NULL"
+        elif vehicle_type == 'Train':
+            query += " AND TR.vehicle_id IS NOT NULL"
+        elif vehicle_type == 'Bus':
+            query += " AND B.vehicle_id IS NOT NULL"
 
         cursor.execute(query, tuple(params))
         tickets = cursor.fetchall()
@@ -114,6 +117,6 @@ def search_tickets(request):
     except Exception as e:
         return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
     finally:
-        if connection.is_connected():
+        if connection and connection.is_connected():
             cursor.close()
             connection.close()
