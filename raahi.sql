@@ -144,3 +144,7 @@ CREATE TABLE Wallet (
 
 ALTER TABLE Reservation MODIFY COLUMN reservation_status
 ENUM('Pending', 'Confirmed', 'Cancelled By Passenger', 'Cancelled By Admin', 'Expired') NOT NULL;
+
+ALTER TABLE Payment MODIFY COLUMN payment_method VARCHAR(25) NOT NULL;
+UPDATE Payment SET payment_method = 'Wallet' WHERE payment_method = 'Bank Transfer';
+ALTER TABLE Payment MODIFY COLUMN payment_method ENUM('PayPal', 'Credit Card', 'Wallet') default NULL;
