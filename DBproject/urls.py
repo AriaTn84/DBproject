@@ -34,4 +34,5 @@ urlpatterns = [
     path('api/report-ticket-issue/', include('Raahi.api.report_ticket_issue.urls')),
     path('api/reserve-ticket/', include('Raahi.api.reserve_a_ticket.urls')),
     path('api/admin/management/', include('Raahi.api.admin_ticket_management.urls')),
+    path('api/wallet/charge/', include('Raahi.api.charge_wallet.urls')),
 ]
