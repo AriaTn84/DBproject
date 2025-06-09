@@ -92,13 +92,22 @@ def create_reservation(request):
             connection.rollback()
             return JsonResponse({'error': 'Failed to create reservation record; no reservation ID was generated.'},
                                 status=500)
+        insert_payment_query = """
+                               INSERT INTO Payment (reservation_id, user_id, payment_status, amount)
+                               VALUES (%s, %s, %s, %s)
+                               """
+        cursor.execute(insert_payment_query,
+                       (reservation_id, passenger_id, 'Pending', ticket_cost))
 
+        if cursor.lastrowid is None:
+            connection.rollback()
+            return JsonResponse({'error': 'Failed to create payment record.'}, status=500)
         connection.commit()
 
         try:
             redis_conn = get_redis_connection()
             redis_key = f"reservation_expiry:{reservation_id}"
-            redis_conn.setex(redis_key, int(RESERVATION_EXPIRY_MINUTES*60) , str(ticket_id))
+            redis_conn.setex(redis_key, int(RESERVATION_EXPIRY_MINUTES * 60), str(ticket_id))
             print(f"Reservation {reservation_id} key set in Redis with {RESERVATION_EXPIRY_MINUTES} min TTL.")
         except Exception as e:
             print(f"Could not set reservation key in Redis: {e}")
