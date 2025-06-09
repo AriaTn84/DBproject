@@ -1,0 +1,36 @@
+{
+    "message": "Ticket details fetched successfully",
+    "data": {
+        "ticket_id": 11,
+        "origin": {
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles"
+        },
+        "destination": {
+            "country": "Turkey",
+            "state": "Istanbul",
+            "city": "Istanbul"
+        },
+        "departure_date": "2025-05-06",
+        "departure_time": "7:45:00",
+        "arrival_date": "2025-06-10",
+        "price": 500.0,
+        "remaining_capacity": 200,
+        "company_name": "Mahan",
+        "vehicle_specifics": {
+            "type": "Airplane",
+            "amenities": {
+                "airline": "Mahan",
+                "airplane_class": "Premium",
+                "arrival_airport": "ATL",
+                "departure_airport": "DEN",
+                "catering": 1,
+                "wifi_access": 1,
+                "flat_bed_seat": 1,
+                "etc": "A319",
+                "flight_number": "SP999"
+            }
+        }
+    }
+}
