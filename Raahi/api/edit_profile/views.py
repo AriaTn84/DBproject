@@ -1,4 +1,6 @@
 import json
+import decimal
+import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ...db import get_db_connection
@@ -35,7 +37,10 @@ def update_user_profile(request):
     allowed_fields = ['first_name', 'last_name', 'phone', 'city_of_residence', 'date_of_birth']
     update_fields = {key: value for key, value in data.items() if key in allowed_fields}
 
-    if not update_fields:
+    # If user sends None for a field, we should update it in DB
+    update_fields_db = {key: value for key, value in update_fields.items() if value is not None}
+
+    if not update_fields_db:
         return JsonResponse({'error': 'No valid fields provided to update'}, status=400)
 
     set_clause = ", ".join([f"{key} = %s" for key in update_fields.keys()])
@@ -59,9 +64,33 @@ def update_user_profile(request):
         redis_client = get_redis_connection()
         if redis_client:
             try:
-                redis_client.delete(f"user:{user_id}")
+                cache_key = f"user:{user_id}"
+                if redis_client.exists(cache_key):
+                    update_fields_redis = {k: ('' if v is None else v) for k, v in update_fields.items()}
+                    redis_client.hset(cache_key, mapping=update_fields_redis)
+                    print(f"Redis cache updated for user {user_id}.")
+                else:
+                    print(f"Redis cache not found for user {user_id}. Creating it.")
+                    cursor.execute(
+                        "SELECT user_id, first_name, last_name, email, phone, city_of_residence, date_of_birth FROM Users WHERE user_id = %s",
+                        (user_id,)
+                    )
+                    user = cursor.fetchone()
+                    if user:
+                        columns = [desc[0] for desc in cursor.description]
+                        user_dict = dict(zip(columns, user))
+
+                        for key, value in user_dict.items():
+                            if value is None:
+                                user_dict[key] = ''
+                            elif isinstance(value, (datetime.date, datetime.datetime, decimal.Decimal)):
+                                user_dict[key] = str(value)
+
+                        redis_client.hset(cache_key, mapping=user_dict)
+                        print(f"Redis cache created for user {user_id}.")
+
             except Exception as e:
-                print(f"Could not delete user cache from Redis: {e}")
+                print(f"Could not update or create user cache in Redis: {e}")
 
         return JsonResponse({'message': 'User profile updated successfully'})
     except Exception as e:
