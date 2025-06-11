@@ -9,6 +9,9 @@ from ...db import get_db_connection
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.settings import api_settings
 
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 def generate_otp(length=6):
     return ''.join(random.choices(string.digits, k=length))
@@ -51,13 +54,22 @@ def send_otp(request):
     otp = generate_otp()
     try:
         redis_client.setex(f"otp:{email}", 300, otp)
+
+        subject = 'Welcome to Raahi - Your Verification Code'
+        context = {'otp': otp}
+
+        html_message = render_to_string('otp_email.html', context)
+        plain_message = strip_tags(html_message)
+
         send_mail(
-            subject='Your Raahi Verification Code',
-            message=f'Your verification code is {otp}. It is valid for 5 minutes.',
+            subject=subject,
+            message=plain_message,
             from_email='mobinfallahi0@gmail.com',
             recipient_list=[email],
             fail_silently=False,
+            html_message=html_message
         )
+
         return JsonResponse({'message': 'OTP sent successfully'})
     except Exception as e:
         print(f"SMTP Error: {str(e)}")
