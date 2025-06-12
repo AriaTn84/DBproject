@@ -46,14 +46,14 @@ def cancel_with_penalty(request):
         connection.start_transaction()
 
         cursor.execute("""
-            SELECT R.*, T.departure_date, T.departure_time, T.cost, P.payment_status
-            FROM Reservation R
-            JOIN Ticket T ON R.ticket_id = T.ticket_id
-            LEFT JOIN Payment P ON R.reservation_id = P.reservation_id
-            WHERE R.reservation_id = %s
-            ORDER BY P.payment_date DESC
-            LIMIT 1
-        """, (reservation_id,))
+                       SELECT R.*, T.departure_date, T.departure_time, T.cost, P.payment_status
+                       FROM Reservation R
+                                JOIN Ticket T ON R.ticket_id = T.ticket_id
+                                LEFT JOIN Payment P ON R.reservation_id = P.reservation_id
+                       WHERE R.reservation_id = %s
+                       ORDER BY P.payment_date DESC
+                       LIMIT 1
+                       """, (reservation_id,))
         reservation = cursor.fetchone()
 
         if not reservation:

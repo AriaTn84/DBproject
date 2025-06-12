@@ -176,10 +176,10 @@ def update_user_report_view(request, report_id):
 
         query_update_report = """
                               UPDATE Reports
-                              SET report_status  = %s, \
-                                  admin_response = %s, \
+                              SET report_status  = %s, 
+                                  admin_response = %s, 
                                   admin_id       = %s
-                              WHERE report_id = %s \
+                              WHERE report_id = %s 
                               """
         params_update = (new_status, admin_response_text, admin_user_id, report_id)
 
