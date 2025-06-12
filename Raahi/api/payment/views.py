@@ -87,6 +87,7 @@ def pay_for_ticket(request):
         try:
             redis_conn = get_redis_connection()
             redis_conn.delete(f"reservation_expiry:{reservation_id}")
+            redis_conn.delete(f"reminder_trigger:{reservation_id}")
             redis_conn.delete(f"user:{user_id}")
         except Exception as e:
             print(f"Redis cleanup error: {e}")
