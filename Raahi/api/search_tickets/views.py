@@ -25,12 +25,19 @@ def search_tickets(request):
     departure_date = request.GET.get('departure_date')
     vehicle_type = request.GET.get('vehicle_type')
 
+    min_cost = request.GET.get('min_cost')
+    max_cost = request.GET.get('max_cost')
+    company_name = request.GET.get('company_name')
+    departure_time = request.GET.get('departure_time')
+    travel_class = request.GET.get('travel_class')
+
     if not all([departure_city, arrival_city, departure_date]):
         return JsonResponse({'error': 'departure_city, arrival_city, and departure_date are required parameters.'},
                             status=400)
 
     redis_client = get_redis_connection()
-    cache_key = f"search:{departure_city}:{arrival_city}:{departure_date}:{vehicle_type or 'any'}"
+    cache_key = (f"search:{departure_city}:{arrival_city}:{departure_date}:{vehicle_type or 'any'}"
+                 f":{min_cost or ''}:{max_cost or ''}:{company_name or ''}:{departure_time or ''}:{travel_class or ''}")
 
     if redis_client:
         try:
@@ -69,7 +76,9 @@ def search_tickets(request):
                     WHEN TR.vehicle_id IS NOT NULL THEN 'Train'
                     WHEN B.vehicle_id IS NOT NULL THEN 'Bus'
                     ELSE 'Unknown'
-                END AS vehicle_type
+                END AS vehicle_type,
+                A.airplane_class,
+                TR.star as train_star
             FROM
                 Ticket AS T
             JOIN
@@ -96,6 +105,33 @@ def search_tickets(request):
             query += " AND TR.vehicle_id IS NOT NULL"
         elif vehicle_type == 'Bus':
             query += " AND B.vehicle_id IS NOT NULL"
+
+        if min_cost:
+            query += " AND T.cost >= %s"
+            params.append(min_cost)
+
+        if max_cost:
+            query += " AND T.cost <= %s"
+            params.append(max_cost)
+
+        if company_name:
+            query += " AND V.company_name = %s"
+            params.append(company_name)
+
+        if departure_time:
+            query += " AND T.departure_time = %s"
+            params.append(departure_time)
+
+        if travel_class:
+            if vehicle_type == 'Airplane':
+                query += " AND A.airplane_class = %s"
+                params.append(travel_class)
+            elif vehicle_type == 'Train':
+                query += " AND TR.star = %s"
+                params.append(travel_class)
+            elif vehicle_type == 'Bus':
+                query += " AND B.vehicle_class = %s"
+                params.append(travel_class)
 
         cursor.execute(query, tuple(params))
         tickets = cursor.fetchall()

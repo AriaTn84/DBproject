@@ -235,6 +235,11 @@ This is a two-step process used for user authentication.
     -   `arrival_city` (required)
     -   `departure_date` (required, YYYY-MM-DD)
     -   `vehicle_type` (optional: `Airplane`, `Train`, `Bus`)
+    -    `min_cost` (optional)
+    -   `max_cost` (optional)
+    -   `company_name` (optional)
+    -   `departure_time` (optional: `HH:MM:SS`)
+    -   `travel_class` (optional: for Airplane: `Business`, `Economy`, `Premium`, Train: `1, 2, 3, 4, 5`, Bus: `VIP`, `Double Decker`, `Sleeper`)
 -   **Example**: `/api/tickets/search/?departure_city=Tehran&arrival_city=Mashhad&departure_date=2025-06-10&vehicle_type=Train`
 -   **Success Response (200 OK)**:
     ```json
