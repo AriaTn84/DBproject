@@ -64,7 +64,7 @@ def send_otp(request):
         send_mail(
             subject=subject,
             message=plain_message,
-            from_email='mobinfallahi0@gmail.com',
+            from_email='raahi.ticket@gmail.com',
             recipient_list=[email],
             fail_silently=False,
             html_message=html_message
