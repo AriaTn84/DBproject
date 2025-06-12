@@ -3,6 +3,7 @@ import sys
 import django
 import time
 import mysql.connector
+from django.core.cache.backends import redis
 
 project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 if project_path not in sys.path:

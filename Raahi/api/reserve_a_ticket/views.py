@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from Raahi.db import get_db_connection
 from Raahi.redis_client import get_redis_connection
 
-RESERVATION_EXPIRY_MINUTES = 0.2
+RESERVATION_EXPIRY_MINUTES = 10
 
 
 @csrf_exempt
