@@ -4,6 +4,11 @@ import json
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+
 from ...redis_client import get_redis_connection
 from ...db import get_db_connection
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -126,7 +131,6 @@ def verify_otp(request):
                 refresh = RefreshToken()
                 refresh['user_id'] = user_id
                 refresh['email'] = email
-                redis_client.sadd("otp_users", email)
 
                 access_token_lifetime = api_settings.ACCESS_TOKEN_LIFETIME
                 lifetime_in_seconds = int(access_token_lifetime.total_seconds())
@@ -149,3 +153,53 @@ def verify_otp(request):
             return JsonResponse({'error': 'Invalid OTP'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+class CustomTokenRefreshView(APIView):
+    def post(self, request):
+        refresh_token_str = request.data.get("refresh")
+
+        if not refresh_token_str:
+            return Response({"error": "Refresh token not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            refresh = RefreshToken(refresh_token_str)
+            user_email = refresh['email']
+
+            redis_client = get_redis_connection()
+            if redis_client is None:
+                return JsonResponse({'error': 'Redis connection failed'}, status=500)
+
+            user_session = redis_client.get(f"user_session:{user_email}")
+
+            if not user_session:
+                print(f"User {user_email} session not in Redis. Re-fetching from DB...")
+                conn = get_db_connection()
+                cursor = conn.cursor(dictionary=True)
+
+                user_id = refresh["user_id"]
+                cursor.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
+                user = cursor.fetchone()
+                conn.close()
+
+                if not user:
+                    raise InvalidToken("User not found")
+
+                user_data_to_store = {
+                    'user_id': user['user_id'],
+                    'email': user['email']
+                }
+
+                lifetime_in_seconds = api_settings.ACCESS_TOKEN_LIFETIME
+                redis_client.setex(f"user_session:{user_email}", lifetime_in_seconds, "Active")
+
+                print(f"User {user_id} session repopulated in Redis.")
+
+            new_access_token = str(refresh.access_token)
+
+            return Response({
+                'access': new_access_token,
+            }, status=status.HTTP_200_OK)
+
+        except TokenError as e:
+            raise InvalidToken(e.args[0])

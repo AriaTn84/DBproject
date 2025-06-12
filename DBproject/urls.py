@@ -36,6 +36,5 @@ urlpatterns = [
     path('api/reserve-ticket/', include('Raahi.api.reserve_a_ticket.urls')),
     path('api/admin/management/', include('Raahi.api.admin_ticket_management.urls')),
     path('api/wallet/charge/', include('Raahi.api.charge_wallet.urls')),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/payment/', include('Raahi.api.payment.urls')),
 ]

@@ -134,6 +134,21 @@ This is a two-step process used for user authentication.
             "access": "..."
         }
         ```
+-   **Refresh Access Code**
+    -   **Endpoint**: `POST /api/log-in/token/refresh/`
+    -   **Description**: Create a new Access token Even after expire Access token.
+    -   **Input (Body)**:
+        ```json
+        {
+            "refresh": "..."
+        }
+        ```
+    -   **Success Response (200 OK)**:
+        ```json
+        {
+            "access": "..."
+        }
+        ```        
 
 ### 2. User Signup
 
