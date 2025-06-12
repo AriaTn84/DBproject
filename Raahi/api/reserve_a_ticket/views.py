@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from Raahi.db import get_db_connection
 from Raahi.redis_client import get_redis_connection
 
-RESERVATION_EXPIRY_MINUTES = 10
+RESERVATION_EXPIRY_MINUTES = 0.2
 
 
 @csrf_exempt
@@ -106,9 +106,14 @@ def create_reservation(request):
 
         try:
             redis_conn = get_redis_connection()
-            redis_key = f"reservation_expiry:{reservation_id}"
-            redis_conn.setex(redis_key, int(RESERVATION_EXPIRY_MINUTES * 60), str(ticket_id))
-            print(f"Reservation {reservation_id} key set in Redis with {RESERVATION_EXPIRY_MINUTES} min TTL.")
+
+            reminder_trigger_key = f"reminder_trigger:{reservation_id}"
+            redis_conn.setex(reminder_trigger_key, int((RESERVATION_EXPIRY_MINUTES * 60)/2), str(ticket_id))
+
+            final_expiry_key = f"reservation_expiry:{reservation_id}"
+            redis_conn.setex(final_expiry_key, int(RESERVATION_EXPIRY_MINUTES * 60), str(ticket_id))
+
+            print(f"Set final expiration (10m) and reminder trigger (5m) for reservation {reservation_id}")
         except Exception as e:
             print(f"Could not set reservation key in Redis: {e}")
 
