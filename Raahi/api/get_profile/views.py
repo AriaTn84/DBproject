@@ -28,13 +28,6 @@ def get_user_profile(request):
         return JsonResponse({'error': 'Token is invalid or expired'}, status=401)
     except Exception as e:
         return JsonResponse({'error': f'An unexpected error occurred: {str(e)}'}, status=500)
-    # try:
-    #     data = json.loads(request.body)
-    #     user_id = data.get('user_id')
-    #     if not user_id:
-    #         return JsonResponse({'error': 'user_id is a required field'}, status=400)
-    # except json.JSONDecodeError:
-    #     return JsonResponse({'error': 'Invalid JSON format in request body'}, status=400)
 
     redis_client = get_redis_connection()
     if redis_client:
