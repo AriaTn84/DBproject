@@ -232,11 +232,6 @@ The following stored procedures are implemented (see `stored_procedures.sql`):
 
 This is a student project for the **Database Systems** course. Contributions are limited to the project team. For feedback or suggestions, contact the team via GitHub Issues.
 
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---
 
