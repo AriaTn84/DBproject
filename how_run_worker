@@ -1,0 +1,35 @@
+Enter this command line in your terminal or virtual(wsl for windows):
+    sudo nano /etc/redis/redis.conf
+Enter :
+    Ctrl + w
+In search box enter:
+    notify-keyspace-events
+Search multi time to reach:
+    notify-keyspace-events Ex
+Uncommented this line and after this line
+    `#
+#  By default all notifications are disabled because most users don't need
+#  this feature and the feature has some overhead. Note that if you don't
+#  specify at least one of K or E, no events will be delivered.
+`
+Enter `notify-keyspace-events Ex` again and save it.
+
+In your terminal you must see like
+notify-keyspace-events Ex
+#
+#  By default all notifications are disabled because most users don't need
+#  this feature and the feature has some overhead. Note that if you don't
+#  specify at least one of K or E, no events will be delivered.
+notify-keyspace-events Ex
+
+this.
+
+For test to sure work it.
+Enter `redis-cli` command line.
+After Enter the redis, enter CONFIG GET notify-keyspace-events
+```
+127.0.0.1:6379> CONFIG GET notify-keyspace-events
+1) "notify-keyspace-events"
+2) "xE"
+```
+we should see this if you can not see this the worker does not work.

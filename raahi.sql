@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS `raahi_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_persian_ci;
+
+USE `raahi_db`;
+
 CREATE TABLE Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,

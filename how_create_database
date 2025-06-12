@@ -1,0 +1,34 @@
+Step 1: Log in to MySQL
+
+Open the command line (Command Prompt in Windows or Terminal in macOS/Linux) and
+log in to MySQL using the root user or another user with the necessary privileges:
+    mysql -u root -p
+You will be prompted to enter your password.
+
+Step 2: Run the raahi.sql Script
+This script will create the database and tables. After logging into the MySQL prompt,
+use the following command to execute the raahi.sql file. Note: You must replace
+/path/to/your/DBproject/raahi.sql with the absolute path to the file on your system.
+
+    SOURCE /path/to/your/DBproject/raahi.sql;
+
+Step 3: Run the tests.sql Script
+After the database and tables have been successfully created, you can insert the initial data.
+To do this, run the tests.sql script:
+    SOURCE /path/to/your/DBproject/tests.sql;
+As in the previous step, replace the placeholder with the full path to your tests.sql file.
+
+
+Step 4: Verify the Setup
+
+After successfully running both scripts, you can verify that the database,
+tables, and data have been created correctly with the following commands:
+
+Select the database:
+    USE raahi_db;
+Show the tables:
+    SHOW TABLES;
+View data from a table (e.g., Users):
+    SELECT * FROM Users LIMIT 10;
+By following these steps, your raahi_db database will be set up with all the necessary
+tables and initial data to run your project.
