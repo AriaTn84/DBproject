@@ -252,7 +252,7 @@ def confirm_reservation_view(request, reservation_id):
         payment_info = cursor.fetchone()
 
         if not payment_info:
-            return JsonResponse({'error': 'Payment information not found for this reservation.'}, status=400)  # یا 404
+            return JsonResponse({'error': 'Payment information not found for this reservation.'}, status=400)
 
         if payment_info['payment_status'] != 'Completed':
             return JsonResponse({'error': 'You cannot confirm the ticket because the user has not yet paid.'},

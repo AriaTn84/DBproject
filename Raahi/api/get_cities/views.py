@@ -5,9 +5,6 @@ from ...db import get_db_connection
 
 @csrf_exempt
 def get_all_cities(request):
-    """
-    Handles GET requests to fetch a list of unique city names from the Location table.
-    """
     if request.method != 'GET':
         return JsonResponse({'error': 'This method is not allowed'}, status=405)
 

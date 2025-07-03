@@ -37,7 +37,6 @@ def update_user_profile(request):
     allowed_fields = ['first_name', 'last_name', 'phone', 'city_of_residence', 'date_of_birth']
     update_fields = {key: value for key, value in data.items() if key in allowed_fields}
 
-    # If user sends None for a field, we should update it in DB
     update_fields_db = {key: value for key, value in update_fields.items() if value is not None}
 
     if not update_fields_db:
