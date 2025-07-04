@@ -319,7 +319,8 @@ This process is completed in three steps: initial reservation, payment, and view
             "payment_due_by": "YYYY-MM-DDTHH:MM:SS"
         }
         ```
-        If you do not complete the payment after 10 minutes system cancel the reserve(You must run worker).
+    - After 5 minutes send you email remainder to complete payment.  
+    - If you do not complete the payment after 10 minutes system cancel the reserve(You must run worker).
 
 -   **Step 2: Make Payment**
     -   **Endpoint**: `POST /api/payment/pay/`
