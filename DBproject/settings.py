@@ -36,11 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'Raahi.apps.RaahiConfig',
     'rest_framework',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'raahi_db',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'Aria@8484',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
@@ -134,7 +136,6 @@ EMAIL_HOST_USER = 'raahi.ticket@gmail.com'
 EMAIL_HOST_PASSWORD = 'zdiq adxb piin cqla'
 DEFAULT_FROM_EMAIL = 'raahi.ticket@gmail.com'
 
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -174,3 +175,4 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+CORS_ALLOW_ALL_ORIGINS = True
