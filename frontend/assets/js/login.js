@@ -22,15 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         messageBox.className = `mt-4 text-center text-sm p-3 rounded-lg ${isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
     }
 
-    // رویداد برای فرم ارسال ایمیل
     sendOtpForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = emailInput.value;
 
-        // نمایش حالت لودینگ روی دکمه
         sendOtpBtn.disabled = true;
         sendOtpBtn.textContent = 'در حال ارسال...';
-        messageBox.className = ''; // پاک کردن پیام قبلی
+        messageBox.className = '';
 
         try {
             const response = await fetch(SEND_OTP_URL, {
@@ -46,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             showMessage('کد تایید با موفقیت به ایمیل شما ارسال شد.', false);
-            // نمایش فرم OTP و مخفی کردن فرم ایمیل
             emailStep.classList.add('hidden');
             otpStep.classList.remove('hidden');
 
@@ -86,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showMessage('ورود با موفقیت انجام شد! در حال انتقال...', false);
 
             setTimeout(() => {
-                window.location.href = '../../pages/home/index.html';
+                window.location.href = '../../home/index.html';
             }, 2000);
 
         } catch (error) {
@@ -102,6 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         otpStep.classList.add('hidden');
         emailStep.classList.remove('hidden');
         messageBox.className = '';
-        otpInput.value = ''; // پاک کردن فیلد otp
+        otpInput.value = '';
     });
 });
