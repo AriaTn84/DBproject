@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        const apiUrl = `http://127.0.0.1:8000api/tickets/search/?${queryParams.toString()}`;
+        const apiUrl = `http://127.0.0.1:8000/api/tickets/search/?${queryParams.toString()}`;
 
         resultsContainer.innerHTML = '';
         loadingIndicator.classList.remove('hidden');
