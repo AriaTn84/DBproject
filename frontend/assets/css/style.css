@@ -1,0 +1,29 @@
+/* استایل‌های سفارشی برای بهبود ظاهر */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* رنگ پس‌زمینه خاکستری روشن */
+}
+
+/* کلاس برای انیمیشن плавный */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* برای اینکه در مرورگرهای قدیمی‌تر هم تگ details بهتر نمایش داده شود */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
