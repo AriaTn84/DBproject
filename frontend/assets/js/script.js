@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const loginLink = document.getElementById('login-link');
+    const profileLink = document.getElementById('profile-link');
+    const logoutLink = document.getElementById('logout-link');
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (accessToken) {
+        loginLink.classList.add('hidden');
+        profileLink.classList.remove('hidden');
+        logoutLink.classList.remove('hidden');
+    } else {
+        loginLink.classList.remove('hidden');
+        profileLink.classList.add('hidden');
+        logoutLink.classList.add('hidden');
+    }
+
+    logoutLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        alert('شما با موفقیت خارج شدید.');
+        window.location.href = '../auth/login/index.html';
+    });
     const searchForm = document.getElementById('search-form');
     const resultsContainer = document.getElementById('results-container');
     const loadingIndicator = document.getElementById('loading');
@@ -38,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                loadingIndicator.classList.add('hidden'); // پنهان کردن نشانگر
+                loadingIndicator.classList.add('hidden');
 
                 if (data.data && data.data.length > 0) {
                     data.data.forEach(ticket => {
