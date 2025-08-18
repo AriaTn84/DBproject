@@ -152,3 +152,38 @@ ENUM('Pending', 'Confirmed', 'Cancelled By Passenger', 'Cancelled By Admin', 'Ex
 ALTER TABLE Payment MODIFY COLUMN payment_method VARCHAR(25) NOT NULL;
 UPDATE Payment SET payment_method = 'Wallet' WHERE payment_method = 'Bank Transfer';
 ALTER TABLE Payment MODIFY COLUMN payment_method ENUM('PayPal', 'Credit Card', 'Wallet') default NULL;
+
+CREATE TABLE elasticsearch_sync_queue (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    action VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER $$
+CREATE TRIGGER after_ticket_insert
+AFTER INSERT ON Ticket
+FOR EACH ROW
+BEGIN
+    INSERT INTO elasticsearch_sync_queue (ticket_id, action) VALUES (NEW.ticket_id, 'INSERT');
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER after_ticket_update
+AFTER UPDATE ON Ticket
+FOR EACH ROW
+BEGIN
+    DELETE FROM elasticsearch_sync_queue WHERE ticket_id = NEW.ticket_id AND action != 'DELETE';
+    INSERT INTO elasticsearch_sync_queue (ticket_id, action) VALUES (NEW.ticket_id, 'UPDATE');
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER before_ticket_delete
+BEFORE DELETE ON Ticket
+FOR EACH ROW
+BEGIN
+    INSERT INTO elasticsearch_sync_queue (ticket_id, action) VALUES (OLD.ticket_id, 'DELETE');
+END$$
+DELIMITER ;
