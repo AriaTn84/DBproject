@@ -6,20 +6,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const userPhone = document.getElementById('user-phone');
     const userEmail = document.getElementById('user-email');
     const logoutLink = document.getElementById('logout-link');
+    const personalFullname = document.getElementById('personal-fullname');
+    const dateOfBirth = document.getElementById('date-of-birth');
 
     logoutLink.addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         alert('شما با موفقیت خارج شدید.');
-        window.location.href = '../../auth/login/index.html';
+        window.location.href = '../auth/login/index.html';
     });
 
     async function fetchProfileData() {
         const accessToken = localStorage.getItem('accessToken');
 
         if (!accessToken) {
-            window.location.href = '../../auth/login/index.html';
+            window.location.href = '../auth/login/index.html';
             return;
         }
 
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 if (response.status === 401) {
                      alert('نشست شما منقضی شده است. لطفاً دوباره وارد شوید.');
+                     localStorage.clear();
                      window.location.href = '../auth/login/index.html';
                 }
                 throw new Error('خطا در دریافت اطلاعات پروفایل');
@@ -43,11 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const responseData = await response.json();
             const user = responseData.data;
 
-            userFullname.textContent = `${user.first_name} ${user.last_name}`;
+            const fullname = `${user.first_name} ${user.last_name}`;
+            userFullname.textContent = fullname;
             userPhoneDisplay.textContent = user.phone;
             userPhone.textContent = user.phone;
             userEmail.textContent = user.email;
-            walletBalance.textContent = user.balance+"T";
+            personalFullname.textContent = fullname;
+            dateOfBirth.textContent = user.date_of_birth.toString() || '—';
+            walletBalance.textContent = user.balance;
 
         } catch (error) {
             console.error(error);

@@ -64,11 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadingIndicator.classList.add('hidden');
 
                 if (data.data && data.data.length > 0) {
+                    resultsContainer.className = 'flex flex-col gap-4';
                     data.data.forEach(ticket => {
                         const ticketCard = createTicketCard(ticket);
                         resultsContainer.appendChild(ticketCard);
                     });
                 } else {
+                    resultsContainer.className = 'grid grid-cols-1';
                     resultsContainer.innerHTML = `
                         <div class="col-span-full text-center bg-amber-100 text-amber-800 p-4 rounded-lg fade-in">
                             <p>متاسفانه برای این جستجو، بلیطی یافت نشد.</p>
@@ -88,38 +90,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createTicketCard(ticket) {
         const card = document.createElement('div');
-        card.className = 'bg-white border border-slate-200 rounded-xl shadow-md p-5 flex flex-col gap-3 hover:shadow-xl hover:border-blue-500 transition-all duration-300 fade-in';
-
-        let icon = '';
-        let vehicleColor = '';
-        if (ticket.vehicle_type === 'Airplane') {
-            icon = '✈️';
-            vehicleColor = 'text-sky-500';
-        } else if (ticket.vehicle_type === 'Train') {
-            icon = '🚆';
-            vehicleColor = 'text-emerald-500';
-        } else if (ticket.vehicle_type === 'Bus') {
-            icon = '🚌';
-            vehicleColor = 'text-amber-500';
-        }
-
-        card.innerHTML = `
-            <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold text-slate-800">${ticket.company_name}</h3>
-                <span class="text-2xl ${vehicleColor}">${icon}</span>
-            </div>
-            <div class="border-t border-slate-200 my-2"></div>
-            <div class="grid grid-cols-2 gap-2 text-sm text-slate-600">
-                <p><strong>مبدأ:</strong> ${ticket.departure_city}</p>
-                <p><strong>مقصد:</strong> ${ticket.arrival_city}</p>
-                <p><strong>تاریخ حرکت:</strong> ${ticket.departure_date}</p>
-                <p><strong>زمان حرکت:</strong> ${ticket.departure_time.substring(0, 5)}</p>
-            </div>
-            <div class="mt-auto pt-3 text-center">
-                <p class="text-lg font-semibold text-blue-600">${Number(ticket.cost).toLocaleString()} تومان</p>
-                <p class="text-xs text-slate-500 mt-1">${ticket.remaining_capacity} صندلی باقی مانده</p>
+        card.className = 'bg-white border border-slate-200 rounded-xl shadow-md p-4 flex items-center justify-between gap-4 hover:shadow-lg hover:border-blue-500 transition-all duration-300 fade-in';
+        const leftSection = `
+            <div class="flex flex-col items-center justify-center gap-2 w-1/5 text-center border-l border-slate-200 pl-4">
+                <p class="text-xl font-bold text-blue-600">${Number(ticket.cost).toLocaleString()} تومان</p>
+                <button class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-all">انتخاب پرواز</button>
+                <p class="text-xs text-slate-500">${ticket.remaining_capacity} صندلی باقی مانده</p>
             </div>
         `;
+        let vehicleIcon = '❔';
+        if (ticket.vehicle_type === 'Airplane') {
+            vehicleIcon = '✈️';
+        } else if (ticket.vehicle_type === 'Train') {
+            vehicleIcon = '🚆';
+        } else if (ticket.vehicle_type === 'Bus') {
+            vehicleIcon = '🚌';
+        }
+
+        const arrivalTime = ticket.arrival_time ? ticket.arrival_time.substring(0, 5) : '--:--';
+        const middleSection = `
+            <div class="flex-grow">
+                <div class="flex items-center justify-between">
+                    <div class="text-right">
+                        <p class="text-2xl font-bold font-mono">${ticket.departure_time.substring(0, 5)}</p>
+                        <p class="text-sm text-slate-600">${ticket.departure_city}</p>
+                    </div>
+                    <div class="flex-grow flex items-center mx-4">
+                        <div class="w-full border-b-2 border-dotted border-slate-300 relative">
+                            <span class="absolute left-1/2 -translate-x-1/2 -top-3 text-xl">${vehicleIcon}</span>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-2xl font-bold font-mono">${arrivalTime}</p>
+                        <p class="text-sm text-slate-600">${ticket.arrival_city}</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-4 mt-2 text-xs text-blue-600">
+                    <a href="#" class="hover:underline">اطلاعات پرواز</a>
+                    <a href="#" class="hover:underline">قوانین استرداد</a>
+                </div>
+            </div>
+        `;
+
+        const travelClass = ticket.airplane_class || ticket.train_star || 'استاندارد';
+        const rightSection = `
+            <div class="flex flex-col items-center justify-center gap-2 w-1/4">
+                <div class="flex items-center gap-3">
+                    <img src="https://placehold.co/40x40/E03131/FFFFFF?text=${ticket.company_name.charAt(0)}" alt="Company Logo" class="w-10 h-10 rounded-full">
+                    <span class="font-semibold">${ticket.company_name}</span>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">${travelClass}</span>
+                </div>
+            </div>
+        `;
+
+        card.innerHTML = rightSection + middleSection + leftSection;
+
         return card;
     }
 });
