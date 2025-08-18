@@ -49,7 +49,8 @@ def get_user_profile(request):
     try:
         cursor = connection.cursor(dictionary=True)
         cursor.execute(
-            "SELECT user_id, first_name, last_name, email, phone, date_of_birth, city_of_residence FROM Users WHERE user_id = %s",
+            "SELECT u.user_id, u.first_name, u.last_name, u.email, u.phone, u.date_of_birth, u.city_of_residence, w.balance  "
+            "FROM Users u JOIN Wallet w ON u.user_id = w.user_id WHERE u.user_id = %s",
             (user_id,))
         user = cursor.fetchone()
 
