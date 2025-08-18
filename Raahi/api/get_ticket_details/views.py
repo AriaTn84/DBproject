@@ -6,7 +6,7 @@ from ...db import get_db_connection
 
 @csrf_exempt
 def get_ticket_details(request):
-    if request.method != 'GET':
+    if request.method != 'POST':
         return JsonResponse({'error': 'This method is not allowed'}, status=405)
 
     try:
