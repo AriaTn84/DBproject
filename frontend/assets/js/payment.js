@@ -1,14 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const PROFILE_API_URL = 'http://127.0.0.1:8000/api/profile/get/';
-    const RESERVE_API_URL = 'http://127.0.0.1:8000/api/reserve-ticket/';
     const PAYMENT_API_URL = 'http://127.0.0.1:8000/api/payment/pay/';
 
     const ticketDetailsContainer = document.getElementById('ticket-details');
     const totalPriceEl = document.getElementById('total-price');
     const payButton = document.getElementById('pay-button');
     const messageBox = document.getElementById('message-box');
-    const nationalIdInput = document.getElementById('national_id');
     const firstNameEl = document.getElementById('passenger-first-name');
     const lastNameEl = document.getElementById('passenger-last-name');
 
@@ -16,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const accessToken = localStorage.getItem('accessToken');
     const ticketDataString = localStorage.getItem('selectedTicket');
-
+    const reserveDataString = localStorage.getItem('resultReserve');
     if (!accessToken) {
         alert('برای ادامه باید ابتدا وارد حساب کاربری خود شوید.');
         window.location.href = '../auth/login/index.html';
@@ -29,7 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    if (!reserveDataString) {
+        ticketDetailsContainer.innerHTML = '<p class="text-red-500">خطا: هیچ رزروی است.</p>';
+        payButton.disabled = true;
+        return;
+    }
+
     const ticket = JSON.parse(ticketDataString);
+    const reserve = JSON.parse(reserveDataString)
 
     async function fetchAndDisplayUserInfo() {
         try {
@@ -66,12 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     payButton.addEventListener('click', async () => {
-        const nationalId = nationalIdInput.value;
-        if (!nationalId || !/^\d{10}$/.test(nationalId)) {
-            showMessage('لطفاً کد ملی ۱۰ رقمی را به درستی وارد کنید.', true);
-            return;
-        }
-
         if (!userInfo.first_name || !userInfo.last_name) {
             showMessage('اطلاعات کاربر بارگذاری نشده است. لطفاً صفحه را رفرش کنید.', true);
             return;
@@ -81,26 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         payButton.textContent = 'در حال پردازش...';
 
         try {
-            const reserveResponse = await fetch(RESERVE_API_URL, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
-                body: JSON.stringify({
-                    ticket_id: ticket.id, passengers: [{
-                        first_name: userInfo.first_name, last_name: userInfo.last_name, national_id: nationalId
-                    }]
-                }),
-            });
-            const reserveResult = await reserveResponse.json();
-            if (!reserveResponse.ok) throw new Error(reserveResult.error || 'خطا در رزرو بلیط.');
-
-            showMessage('بلیط رزرو شد. در حال پرداخت...', false);
-
-            const reservationId = reserveResult.reservation_id;
+            const reservationId = reserve.reservation_id;
             const paymentResponse = await fetch(PAYMENT_API_URL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
                 body: JSON.stringify({
-                    reservation_id: reservationId, payment_method: "Wallet"
+                    reservation_id: parseInt(reservationId)
                 }),
             });
             const paymentResult = await paymentResponse.json();
@@ -111,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             payButton.classList.remove('bg-green-600', 'hover:bg-green-700');
             payButton.classList.add('bg-gray-400');
             localStorage.removeItem('selectedTicket');
+            localStorage.removeItem('resultReserve')
 
         } catch (error) {
             showMessage(error.message, true);

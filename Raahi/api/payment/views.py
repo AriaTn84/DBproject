@@ -27,11 +27,9 @@ def pay_for_ticket(request):
     try:
         data = json.loads(request.body)
         reservation_id = data.get('reservation_id')
-        payment_method = data.get('payment_method')
-        if not reservation_id or not payment_method:
+        payment_method = 'Wallet'
+        if not reservation_id:
             return JsonResponse({'error': 'reservation_id and payment_method are required.'}, status=400)
-        if payment_method not in ['Wallet', 'Credit Card', 'PayPal', 'Bank Transfer']:
-            return JsonResponse({'error': 'Invalid payment method.'}, status=400)
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON in request body.'}, status=400)
 

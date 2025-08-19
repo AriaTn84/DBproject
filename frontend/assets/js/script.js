@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return wrapper;
     }
 
-    resultsContainer.addEventListener('click', (event) => {
+    resultsContainer.addEventListener('click', async (event) => {
         const button = event.target.closest('.select-flight-btn');
 
         if (button) {
@@ -276,19 +276,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const ticketData = {
-                id: button.dataset.ticketId,
-                origin: button.dataset.origin,
-                destination: button.dataset.destination,
-                price: button.dataset.price,
-                vehicle: button.dataset.vehicle,
-                departureTime: button.dataset.departureTimeFull
-            };
+            const ticketId = button.dataset.ticketId;
+            try {
+                const response = await fetch('http://localhost:8000/api/reserve-ticket/', {
+                    method: 'POST', headers: {
+                        'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`
+                    }, body: JSON.stringify({
+                        ticket_id: ticketId
+                    })
+                });
 
-            localStorage.setItem('selectedTicket', JSON.stringify(ticketData));
-
-            window.location.href = '../payment/index.html';
+                const resultReserve = await response.json();
+                const ticketData = {
+                    id: button.dataset.ticketId,
+                    origin: button.dataset.origin,
+                    destination: button.dataset.destination,
+                    price: button.dataset.price,
+                    vehicle: button.dataset.vehicle,
+                    departureTime: button.dataset.departureTimeFull
+                };
+                if (response.ok) {
+                    alert(`بلیط با موفقیت رزرو شد! شماره رزرو: ${resultReserve.reservation_id}.`);
+                    localStorage.setItem('selectedTicket', JSON.stringify(ticketData));
+                    localStorage.setItem('resultReserve', JSON.stringify(resultReserve));
+                    window.location.href = '../payment/index.html';
+                } else {
+                    alert(`خطا در رزرو: ${resultReserve.error || 'مشکلی در سرور رخ داده است.'}`);
+                }
+            } catch (error) {
+                console.error('Error reserving ticket:', error);
+                alert('امکان برقراری ارتباط با سرور وجود ندارد.');
+            }
         }
     });
-
 });
