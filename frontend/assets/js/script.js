@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const result = await response.json();
             const details = result.data;
-            const specifics = details.vehicle_specifics;
+            const specifics = details.vehicle_type;
 
             let detailsHTML = '';
 

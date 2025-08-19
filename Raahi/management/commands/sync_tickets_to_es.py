@@ -41,11 +41,20 @@ class Command(BaseCommand):
                             t.*,
                             dep.city AS departure_city,
                             arr.city AS arrival_city,
-                            v.company_name
+                            v.company_name,
+                            CASE
+                                WHEN a.vehicle_id IS NOT NULL THEN 'Airplane'
+                                WHEN tr.vehicle_id IS NOT NULL THEN 'Train'
+                                WHEN b.vehicle_id IS NOT NULL THEN 'Bus'
+                                ELSE 'Unknown'
+                            END AS vehicle_type
                         FROM Ticket t
                         JOIN Location dep ON t.departure_location_id = dep.location_id
                         JOIN Location arr ON t.arrival_location_id = arr.location_id
-                        LEFT JOIN Vehicle v ON t.vehicle_id = v.vehicle_id;
+                        LEFT JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
+                        LEFT JOIN Airplane a ON t.vehicle_id = a.vehicle_id
+                        LEFT JOIN Train tr ON t.vehicle_id = tr.vehicle_id
+                        LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id;
             """
 
             cursor.execute(query)
