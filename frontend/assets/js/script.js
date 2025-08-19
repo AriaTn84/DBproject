@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     const loginLink = document.getElementById('login-link');
     const profileLink = document.getElementById('profile-link');
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const GET_TICKET_DETAILS_URL = 'http://127.0.0.1:8000/api/get-ticket-details/';
 
 
-    searchForm.addEventListener('submit', function(event) {
+    searchForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
         const params = {
@@ -61,7 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(apiUrl)
             .then(response => {
                 if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.error || `خطای شبکه: ${response.status}`) });
+                    return response.json().then(err => {
+                        throw new Error(err.error || `خطای شبکه: ${response.status}`)
+                    });
                 }
                 return response.json();
             })
@@ -97,7 +99,17 @@ document.addEventListener('DOMContentLoaded', function() {
         return `
             <div class="flex flex-col items-center justify-center gap-2 w-1/5 text-center border-l border-slate-200 pl-4">
                 <p class="text-xl font-bold text-blue-600">${Number(ticket.cost).toLocaleString()} تومان</p>
-                <button data-ticket-id="${ticket.ticket_id}" class="select-flight-btn w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-all">انتخاب پرواز</button>
+                <button 
+                    class="select-flight-btn w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-all"
+                    data-ticket-id="${ticket.ticket_id}"
+                    data-origin="${ticket.departure_city}"
+                    data-destination="${ticket.arrival_city}"
+                    data-price="${ticket.cost}"
+                    data-vehicle="${ticket.vehicle_type}"
+                    data-departure-time-full="${ticket.departure_date}T${ticket.departure_time}"
+                    >
+                    انتخاب پرواز
+                </button>
                 <p class="text-xs text-slate-500">${ticket.remaining_capacity} صندلی باقی مانده</p>
             </div>
         `;
@@ -105,9 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getMiddleSection(ticket) {
         let vehicleIcon = '❔';
-        if (ticket.vehicle_type === 'Airplane') vehicleIcon = '✈️';
-        else if (ticket.vehicle_type === 'Train') vehicleIcon = '🚆';
-        else if (ticket.vehicle_type === 'Bus') vehicleIcon = '🚌';
+        if (ticket.vehicle_type === 'Airplane') vehicleIcon = '✈️'; else if (ticket.vehicle_type === 'Train') vehicleIcon = '🚆'; else if (ticket.vehicle_type === 'Bus') vehicleIcon = '🚌';
 
         const arrivalTime = ticket.arrival_time ? ticket.arrival_time.substring(0, 5) : '--:--';
 
@@ -137,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getRightSection(ticket) {
-         const travelClass = ticket.airplane_class || ticket.train_star || 'استاندارد';
-         return `
+        const travelClass = ticket.airplane_class || ticket.train_star || 'استاندارد';
+        return `
             <div class="flex flex-col items-center justify-center gap-2 w-1/4">
                 <div class="flex items-center gap-3">
                     <img src="https://placehold.co/40x40/E03131/FFFFFF?text=${ticket.company_name.charAt(0)}" alt="Company Logo" class="w-10 h-10 rounded-full">
@@ -157,8 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch(GET_TICKET_DETAILS_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ticket_id: ticketId })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ticket_id: ticketId})
             });
 
             if (!response.ok) {
@@ -200,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div><strong class="block text-slate-500 mb-1">مانیتور شخصی</strong><span>${amenities.personal_monitor ? 'دارد' : 'ندارد'}</span></div>
                     </div>`;
             } else {
-                 detailsHTML = '<p class="text-center text-slate-500">جزئیات بیشتری برای این بلیط یافت نشد.</p>';
+                detailsHTML = '<p class="text-center text-slate-500">جزئیات بیشتری برای این بلیط یافت نشد.</p>';
             }
 
             detailsContainer.innerHTML = `
@@ -254,4 +264,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return wrapper;
     }
+
+    resultsContainer.addEventListener('click', (event) => {
+        const button = event.target.closest('.select-flight-btn');
+
+        if (button) {
+            const accessToken = localStorage.getItem('accessToken');
+            if (!accessToken) {
+                alert('برای رزرو بلیط، لطفاً ابتدا وارد حساب کاربری خود شوید.');
+                window.location.href = '../auth/login/index.html';
+                return;
+            }
+
+            const ticketData = {
+                id: button.dataset.ticketId,
+                origin: button.dataset.origin,
+                destination: button.dataset.destination,
+                price: button.dataset.price,
+                vehicle: button.dataset.vehicle,
+                departureTime: button.dataset.departureTimeFull
+            };
+
+            localStorage.setItem('selectedTicket', JSON.stringify(ticketData));
+
+            window.location.href = '../payment/index.html';
+        }
+    });
+
 });
