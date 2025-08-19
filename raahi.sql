@@ -38,10 +38,11 @@ CREATE TABLE Location (
     city VARCHAR(50) NOT NULL
     );
     
-    CREATE TABLE Ticket (
+CREATE TABLE Ticket (
     ticket_id INT PRIMARY KEY AUTO_INCREMENT,
     departure_location_id INT NOT NULL,
     arrival_location_id INT NOT NULL,
+    arrival_time TIME NOT NULL, 
     arrival_date DATE NOT NULL,
     departure_time TIME NOT NULL,
     departure_date DATE NOT NULL,

@@ -152,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    // ✅✅✅ تابع fetchTicketDetails به طور کامل بازنویسی شده است ✅✅✅
     async function fetchTicketDetails(ticketId, detailsContainer) {
         detailsContainer.innerHTML = '<p class="text-center text-slate-500 p-4">در حال بارگذاری جزئیات...</p>';
         try {
