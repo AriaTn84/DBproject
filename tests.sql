@@ -355,3 +355,7 @@ INSERT INTO Wallet (user_id, balance) VALUES
 
 UPDATE wallet
 SET balance = balance + 500000;
+
+
+UPDATE wallet
+SET balance = balance + 100000;
