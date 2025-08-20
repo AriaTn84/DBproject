@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         alert('شما با موفقیت خارج شدید.');
-        window.location.href = '../auth/login/index.html';
+        window.location.href = '../../auth/login/index.html';
     });
 
     async function fetchProfileData() {
@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                     alert('نشست شما منقضی شده است. لطفاً دوباره وارد شوید.');
-                     localStorage.clear();
-                     window.location.href = '../auth/login/index.html';
+                    alert('نشست شما منقضی شده است. لطفاً دوباره وارد شوید.');
+                    localStorage.clear();
+                    window.location.href = '../auth/login/index.html';
                 }
                 throw new Error('خطا در دریافت اطلاعات پروفایل');
             }
