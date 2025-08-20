@@ -97,7 +97,7 @@ def get_ticket_details(request):
             "price": float(ticket_details["cost"]) if ticket_details["cost"] is not None else None,
             "remaining_capacity": ticket_details["remaining_capacity"],
             "company_name": ticket_details["company_name"],
-            "vehicle_specifics": vehicle_specific_details if vehicle_specific_details else None
+            "vehicle_type": vehicle_specific_details if vehicle_specific_details else None
         }
 
         return JsonResponse({'message': 'Ticket details fetched successfully', 'data': response_data}, status=200)
