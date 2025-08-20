@@ -26,16 +26,24 @@ def process_sync_queue():
 
             if action in ('INSERT', 'UPDATE'):
                 query = """
-                    SELECT
-                        t.*,
-                        dep.city AS departure_city,
-                        arr.city AS arrival_city,
-                        v.company_name
-                    FROM Ticket t
-                    JOIN Location dep ON t.departure_location_id = dep.location_id
-                    JOIN Location arr ON t.arrival_location_id = arr.location_id
-                    LEFT JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
-                    WHERE t.ticket_id = %s;
+                    SELECT 
+                            t.*,
+                            dep.city AS departure_city,
+                            arr.city AS arrival_city,
+                            v.company_name,
+                            CASE
+                                WHEN a.vehicle_id IS NOT NULL THEN 'Airplane'
+                                WHEN tr.vehicle_id IS NOT NULL THEN 'Train'
+                                WHEN b.vehicle_id IS NOT NULL THEN 'Bus'
+                                ELSE 'Unknown'
+                            END AS vehicle_type
+                        FROM Ticket t
+                        JOIN Location dep ON t.departure_location_id = dep.location_id
+                        JOIN Location arr ON t.arrival_location_id = arr.location_id
+                        LEFT JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
+                        LEFT JOIN Airplane a ON t.vehicle_id = a.vehicle_id
+                        LEFT JOIN Train tr ON t.vehicle_id = tr.vehicle_id
+                        LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id;
                 """
                 inner_cursor = db.cursor()
                 inner_cursor.execute(query, (ticket_id,))
