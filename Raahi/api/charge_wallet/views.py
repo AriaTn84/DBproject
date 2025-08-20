@@ -56,6 +56,16 @@ def charge_wallet(request):
         cursor.execute("SELECT balance FROM Wallet WHERE user_id = %s", (user_id,))
         updated_wallet = cursor.fetchone()
 
+        redis_client = get_redis_connection()
+        if redis_client:
+            try:
+                cache_key = f"user:{user_id}"
+                if redis_client.exists(cache_key):
+                    redis_client.hset(cache_key, 'balance', str(updated_wallet['balance']))
+                    print(f"Redis cache updated for user {user_id}.")
+            except Exception as e:
+                print(f"Could not update user cache in Redis: {e}")
+
         return JsonResponse({
             'message': 'Wallet charged successfully',
             'data': {'new_balance': updated_wallet['balance']}
