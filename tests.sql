@@ -355,3 +355,10 @@ INSERT INTO Wallet (user_id, balance) VALUES
 
 UPDATE wallet
 SET balance = balance + 500000;
+
+UPDATE Ticket
+SET
+    departure_date = DATE_ADD(departure_date, INTERVAL 5 MONTH),
+    arrival_date = DATE_ADD(arrival_date, INTERVAL 5 MONTH)
+WHERE
+    departure_date <= CURDATE();
