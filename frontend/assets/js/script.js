@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
                 <div class="flex items-center justify-end gap-4 mt-2 text-xs text-blue-600">
-                    <a href="#" class="hover:underline flight-details-link" data-ticket-id="${ticket.ticket_id}">اطلاعات پرواز</a>
-                    <a href="#" class="hover:underline">قوانین استرداد</a>
+                    <a href="#" class="hover:underline flight-details-link" data-ticket-id="${ticket.ticket_id}">اطلاعات سفر</a>
+                    <a href="#" class="hover:underline refund-rules-link">قوانین استرداد</a>
                 </div>
             </div>
         `;
@@ -236,10 +236,41 @@ document.addEventListener('DOMContentLoaded', function () {
         const detailsSection = document.createElement('div');
         detailsSection.className = 'hidden p-4 border-t border-slate-200';
 
+        const refundSection = document.createElement('div');
+        refundSection.className = 'hidden p-4 border-t border-slate-200';
+        refundSection.innerHTML = `
+            <div class="text-center mb-4">
+                <h4 class="font-semibold text-slate-800">قوانین استرداد بلیط</h4>
+                <p class="text-xs text-slate-500">درصد جریمه کسر شده بر اساس زمان اعلام کنسلی محاسبه می‌گردد.</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                <div class="p-2">
+                    <p class="font-bold text-lg text-red-600">۱۰٪</p>
+                    <p class="text-slate-600">بیشتر از ۷ روز مانده به پرواز</p>
+                </div>
+                <div class="p-2">
+                    <p class="font-bold text-lg text-red-600">۲۰٪</p>
+                    <p class="text-slate-600">از ۷ روز تا ۱ روز مانده به پرواز</p>
+                </div>
+                <div class="p-2">
+                    <p class="font-bold text-lg text-red-600">۳۰٪</p>
+                    <p class="text-slate-600">از ۲۴ ساعت تا ۱۲ ساعت مانده به پرواز</p>
+                </div>
+                <div class="p-2">
+                    <p class="font-bold text-lg text-red-600">۵۰٪</p>
+                    <p class="text-slate-600">کمتر از ۱۲ ساعت مانده به پرواز</p>
+                </div>
+            </div>
+             <div class="text-center mt-4">
+                <button class="text-blue-600 text-sm font-semibold close-refund-btn">بستن</button>
+            </div>
+        `;
+
         wrapper.appendChild(mainCard);
         wrapper.appendChild(detailsSection);
-
+        wrapper.appendChild(refundSection);
         const detailsLink = mainCard.querySelector('.flight-details-link');
+        const refundLink = mainCard.querySelector('.refund-rules-link');
 
         detailsLink.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -260,6 +291,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             detailsSection.classList.toggle('hidden');
             wrapper.classList.toggle('shadow-xl');
+        });
+
+        refundLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            detailsSection.classList.add('hidden');
+            refundSection.classList.toggle('hidden');
+            wrapper.classList.toggle('shadow-xl', !refundSection.classList.contains('hidden'));
         });
 
         return wrapper;
