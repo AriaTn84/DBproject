@@ -43,7 +43,8 @@ def process_sync_queue():
                         LEFT JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
                         LEFT JOIN Airplane a ON t.vehicle_id = a.vehicle_id
                         LEFT JOIN Train tr ON t.vehicle_id = tr.vehicle_id
-                        LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id;
+                        LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id
+                        WHERE t.ticket_id = %s;
                 """
                 inner_cursor = db.cursor()
                 inner_cursor.execute(query, (ticket_id,))
@@ -79,7 +80,7 @@ class Command(BaseCommand):
         while True:
             try:
                 process_sync_queue()
-                time.sleep(5)
+                time.sleep(10)
             except KeyboardInterrupt:
                 self.stdout.write(self.style.WARNING('Worker stopped by user.'))
                 sys.exit(0)
