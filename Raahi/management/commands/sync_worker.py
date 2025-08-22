@@ -44,7 +44,7 @@ def process_sync_queue():
                         LEFT JOIN Airplane a ON t.vehicle_id = a.vehicle_id
                         LEFT JOIN Train tr ON t.vehicle_id = tr.vehicle_id
                         LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id
-                        WHERE t.ticket_id = %s;
+                        WHERE t.ticket_id = %s AND t.departure_date > NOW();
                 """
                 inner_cursor = db.cursor()
                 inner_cursor.execute(query, (ticket_id,))

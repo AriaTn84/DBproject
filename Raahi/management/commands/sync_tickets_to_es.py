@@ -54,7 +54,8 @@ class Command(BaseCommand):
                         LEFT JOIN Vehicle v ON t.vehicle_id = v.vehicle_id
                         LEFT JOIN Airplane a ON t.vehicle_id = a.vehicle_id
                         LEFT JOIN Train tr ON t.vehicle_id = tr.vehicle_id
-                        LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id;
+                        LEFT JOIN Bus b ON t.vehicle_id = b.vehicle_id
+                        WHERE t.departure_date > NOW();
             """
 
             cursor.execute(query)

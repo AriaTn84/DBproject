@@ -68,10 +68,17 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 loadingIndicator.classList.add('hidden');
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
 
-                if (data.data && data.data.length > 0) {
+                const validTickets = data.data.filter(ticket => {
+                    const ticketDate = new Date(ticket.departure_date);
+                    return ticketDate >= today;
+                });
+
+                if (validTickets.length > 0) {
                     resultsContainer.className = 'flex flex-col gap-4';
-                    data.data.forEach(ticket => {
+                    validTickets.forEach(ticket => {
                         const ticketElement = createTicketCard(ticket);
                         resultsContainer.appendChild(ticketElement);
                     });
