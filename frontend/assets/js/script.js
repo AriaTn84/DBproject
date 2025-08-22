@@ -201,6 +201,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div><strong class="block text-slate-500 mb-1">کلاس پرواز</strong><span>${amenities.airplane_class || 'N/A'}</span></div>
                         <div><strong class="block text-slate-500 mb-1">مدل هواپیما</strong><span>${amenities.etc || 'نامشخص'}</span></div>
                         <div><strong class="block text-slate-500 mb-1">ایرلاین</strong><span>${amenities.airline || 'N/A'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">پذیرایی</strong><span>${amenities.catering ? 'پذیرایی دارد' : 'بدون پذیرایی'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">وایفای</strong><span>${amenities.wifi_access ? 'وایفای دارد' : 'بدون وایفای'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">صندلی تخت شو</strong><span>${amenities.flat_wagon ? ' دارد' : 'ندارد'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">فرودگاه مبدا</strong><span>${amenities.departure_airport}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">فرودگاه مقصد</strong><span>${amenities.arrival_airport}</span></div>
                     </div>`;
             } else if (specifics.type === 'Train') {
                 const amenities = specifics.amenities;
@@ -209,7 +214,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div><strong class="block text-slate-500 mb-1">شماره قطار</strong><span class="font-mono">${details.ticket_id}</span></div>
                         <div><strong class="block text-slate-500 mb-1">درجه قطار</strong><span>${amenities.star} ستاره</span></div>
                         <div><strong class="block text-slate-500 mb-1">شماره واگن</strong><span>${amenities.car_number}</span></div>
-                        <div><strong class="block text-slate-500 mb-1">امکانات</strong><span>${amenities.catering ? 'پذیرایی دارد' : 'بدون پذیرایی'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">پذیرایی</strong><span>${amenities.catering ? 'پذیرایی دارد' : 'بدون پذیرایی'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">وایفای</strong><span>${amenities.wifi_access ? 'وایفای دارد' : 'بدون وایفای'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">واگن تخت دار</strong><span>${amenities.flat_wagon ? ' دارد' : 'ندارد'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">سایر امکانات</strong><span>${amenities.etc}</span></div>
                     </div>`;
             } else if (specifics.type === 'Bus') {
                 const amenities = specifics.amenities;
@@ -219,6 +227,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div><strong class="block text-slate-500 mb-1">نوع اتوبوس</strong><span>${amenities.bus_type}</span></div>
                         <div><strong class="block text-slate-500 mb-1">چیدمان</strong><span>${amenities.seats_row_per_row} صندلی در ردیف</span></div>
                         <div><strong class="block text-slate-500 mb-1">مانیتور شخصی</strong><span>${amenities.personal_monitor ? 'دارد' : 'ندارد'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">پذیرایی</strong><span>${amenities.catering ? 'پذیرایی دارد' : 'بدون پذیرایی'}</span></div>
+                        <div><strong class="block text-slate-500 mb-1">سیستم تهویه</strong><span>${amenities.ventilation ? ' دارد' : 'ندارد'}</span></div>
                     </div>`;
             } else {
                 detailsHTML = '<p class="text-center text-slate-500">جزئیات بیشتری برای این بلیط یافت نشد.</p>';
