@@ -63,7 +63,7 @@ def get_user_profile(request):
                     user['date_of_birth'] = str(user['date_of_birth'])
                 if user.get('balance'):
                     user['balance'] = str(user['balance'])
-                redis_client.hset(f"user:{user_id}", mapping=user)
+                redis_client.hset(f"user:{user_id}:balance{user.balance}", mapping=user)
             except Exception as e:
                 print(f"Could not write to Redis cache: {e}")
 
