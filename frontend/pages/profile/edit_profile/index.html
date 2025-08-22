@@ -5,69 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ویرایش پروفایل</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="../../../assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
 
-    <nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <a href="../../home/index.html" class="text-2xl font-bold text-blue-600">Raahi</a>
-                    </div>
-                </div>
-                 <div class="flex items-center">
-                    <a href="../my_profile/index.html" class="flex items-center text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                        <span>بازگشت به پروفایل</span>
-                    </a>
+<nav class="bg-white dark:bg-slate-800 shadow-md fixed top-0 left-0 right-0 z-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <a href="../../home/index.html" class="text-2xl font-bold text-blue-600 dark:text-blue-400">Raahi</a>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <div class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 px-4">
-        <div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-            <h2 class="text-2xl font-bold text-center text-slate-900 mb-2">ویرایش اطلاعات کاربری</h2>
-            <p class="text-center text-slate-500 mb-6">اطلاعات خود را به‌روزرسانی کنید.</p>
-            <form id="edit-profile-form">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="mb-4">
-                        <label for="first_name" class="block text-sm font-medium text-slate-700 mb-2">نام</label>
-                        <input type="text" id="first_name" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="last_name" class="block text-sm font-medium text-slate-700 mb-2">نام خانوادگی</label>
-                        <input type="text" id="last_name" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="phone" class="block text-sm font-medium text-slate-700 mb-2">شماره تلفن</label>
-                        <input type="tel" id="phone" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="city_of_residence" class="block text-sm font-medium text-slate-700 mb-2">شهر محل سکونت</label>
-                        <input type="text" id="city_of_residence" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-4 md:col-span-2">
-                        <label for="date_of_birth" class="block text-sm font-medium text-slate-700 mb-2">تاریخ تولد</label>
-                        <input type="date" id="date_of_birth" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-                <button type="submit" id="update-btn" class="w-full mt-4 bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-all duration-300">
-                    ذخیره تغییرات
-                </button>
-            </form>
-            <div id="message-box" class="mt-4 text-center text-sm p-3 rounded-lg"></div>
+            <div class="flex items-center">
+                <a href="../my_profile/index.html" class="flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">
+                    <span>بازگشت به پروفایل</span>
+                </a>
+            </div>
         </div>
     </div>
+</nav>
 
-    <script src="../../../assets/js/edit_profile.js"></script>
+<div class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 px-4">
+    <div class="w-full max-w-lg bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+        <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-slate-200 mb-2">ویرایش اطلاعات کاربری</h2>
+        <p class="text-center text-slate-500 dark:text-slate-400 mb-6">اطلاعات خود را به‌روزرسانی کنید.</p>
+        <form id="edit-profile-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="mb-4">
+                    <label for="first_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">نام</label>
+                    <input type="text" id="first_name" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white">
+                </div>
+                <div class="mb-4">
+                    <label for="last_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">نام خانوادگی</label>
+                    <input type="text" id="last_name" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white">
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">شماره تلفن</label>
+                    <input type="tel" id="phone" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white">
+                </div>
+                <div class="mb-4">
+                    <label for="city_of_residence" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">شهر محل سکونت</label>
+                    <input type="text" id="city_of_residence" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white">
+                </div>
+                <div class="mb-4 md:col-span-2">
+                    <label for="date_of_birth" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">تاریخ تولد</label>
+                    <input type="date" id="date_of_birth" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white">
+                </div>
+            </div>
+            <button type="submit" id="update-btn" class="w-full mt-4 bg-blue-600 dark:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-400 transition-all duration-300">
+                ذخیره تغییرات
+            </button>
+        </form>
+        <div id="message-box" class="mt-4 text-center text-sm p-3 rounded-lg"></div>
+    </div>
+</div>
+
+<script>
+    const html = document.documentElement;
+    if (localStorage.theme === "dark") {
+        html.classList.add("dark");
+    } else {
+        html.classList.remove("dark");
+    }
+</script>
+
+<script src="../../../assets/js/edit_profile.js"></script>
 </body>
 </html>
-
-
-
-

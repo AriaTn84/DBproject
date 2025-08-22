@@ -5,65 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پرداخت بلیط</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
 
-    <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="../home/index.html" class="text-2xl font-bold text-blue-600">Raahi</a>
-                </div>
-                 <div class="flex items-center">
-                    <a href="../profile/my_profile/index.html" id="profile-link" class="flex items-center text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                        <span>پروفایل من</span>
-                    </a>
-                </div>
+<nav class="bg-white dark:bg-slate-800 shadow-md">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <a href="../home/index.html" class="text-2xl font-bold text-blue-600 dark:text-blue-400">Raahi</a>
             </div>
-        </div>
-    </nav>
-
-    <div class="container mx-auto mt-12 mb-12 px-4">
-        <h1 class="text-3xl font-bold text-center mb-8">صورت‌حساب و پرداخت</h1>
-
-        <div class="max-w-2xl mx-auto grid grid-cols-1 gap-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-                <h2 class="text-xl font-bold mb-6">۱. اطلاعات مسافر</h2>
-                <div id="passenger-info">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-500 mb-1">نام</label>
-                            <p id="passenger-first-name" class="font-semibold text-lg p-3 bg-slate-100 rounded-lg">در حال بارگذاری...</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-500 mb-1">نام خانوادگی</label>
-                            <p id="passenger-last-name" class="font-semibold text-lg p-3 bg-slate-100 rounded-lg"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-                <h2 class="text-xl font-bold mb-4">۲. صورت‌حساب</h2>
-                <div id="ticket-details" class="border-b pb-4 mb-4">
-                    <p class="text-slate-500">در حال بارگذاری اطلاعات...</p>
-                </div>
-                <div class="flex justify-between items-center font-bold text-lg">
-                    <span>مبلغ قابل پرداخت:</span>
-                    <span id="total-price" class="text-blue-600"></span>
-                </div>
-                <button id="pay-button" class="w-full mt-8 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-all flex items-center justify-center">
-                    پرداخت نهایی با کیف پول
-                </button>
-                <div id="message-box" class="mt-4 text-center text-sm p-3 rounded-lg hidden"></div>
+            <div class="flex items-center">
+                <a href="../profile/my_profile/index.html" id="profile-link" class="flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">
+                    <span>پروفایل من</span>
+                </a>
             </div>
         </div>
     </div>
+</nav>
 
-    <script src="../../assets/js/payment.js"></script>
+<div class="container mx-auto mt-12 mb-12 px-4">
+    <h1 class="text-3xl font-bold text-center mb-8 text-slate-900 dark:text-slate-200">صورت‌حساب و پرداخت</h1>
+
+    <div class="max-w-2xl mx-auto grid grid-cols-1 gap-8">
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+            <h2 class="text-xl font-bold mb-6 text-slate-900 dark:text-slate-200">۱. اطلاعات مسافر</h2>
+            <div id="passenger-info">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">نام</label>
+                        <p id="passenger-first-name" class="font-semibold text-lg p-3 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-800 dark:text-slate-200">در حال بارگذاری...</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">نام خانوادگی</label>
+                        <p id="passenger-last-name" class="font-semibold text-lg p-3 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-800 dark:text-slate-200"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+            <h2 class="text-xl font-bold mb-4 text-slate-900 dark:text-slate-200">۲. صورت‌حساب</h2>
+            <div id="ticket-details" class="border-b pb-4 mb-4">
+                <p class="text-slate-500 dark:text-slate-400">در حال بارگذاری اطلاعات...</p>
+            </div>
+            <div class="flex justify-between items-center font-bold text-lg text-slate-900 dark:text-slate-200">
+                <span>مبلغ قابل پرداخت:</span>
+                <span id="total-price" class="text-blue-600 dark:text-blue-400"></span>
+            </div>
+            <button id="pay-button" class="w-full mt-8 bg-green-600 dark:bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-400 transition-all flex items-center justify-center">
+                پرداخت نهایی با کیف پول
+            </button>
+            <div id="message-box" class="mt-4 text-center text-sm p-3 rounded-lg hidden"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const html = document.documentElement;
+    if (localStorage.theme === "dark") {
+        html.classList.add("dark");
+    } else {
+        html.classList.remove("dark");
+    }
+</script>
+
+<script src="../../assets/js/payment.js"></script>
 </body>
 </html>

@@ -5,48 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>موجودی و شارژ حساب</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="../../../assets/css/style.css">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
 
-    <nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="../../home/index.html" class="text-2xl font-bold text-blue-600">Raahi</a>
-                </div>
-                <div class="flex items-center">
-                    <a href="../my_profile/index.html" class="flex items-center text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                        <span>بازگشت به پروفایل</span>
-                    </a>
-                </div>
+<nav class="bg-white dark:bg-slate-800 shadow-md fixed top-0 left-0 right-0 z-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <a href="../../home/index.html" class="text-2xl font-bold text-blue-600 dark:text-blue-400">Raahi</a>
             </div>
-        </div>
-    </nav>
-
-    <div class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 px-4">
-        <div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-            <h2 class="text-2xl font-bold text-center text-slate-900 mb-2">موجودی و اعتبار</h2>
-            <p class="text-center text-slate-500 mb-6">موجودی حساب خود را مشاهده و آن را شارژ کنید.</p>
-
-            <div class="bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 mb-6 text-center">
-                <p class="text-sm">موجودی فعلی شما</p>
-                <p id="wallet-balance" class="text-3xl font-bold">0 تومان</p>
+            <div class="flex items-center">
+                <a href="../my_profile/index.html"
+                   class="flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">
+                    <span>بازگشت به پروفایل</span>
+                </a>
             </div>
-
-            <form id="charge-wallet-form">
-                <div class="mb-4">
-                    <label for="amount" class="block text-sm font-medium text-slate-700 mb-2">مبلغ شارژ (تومان)</label>
-                    <input type="number" id="amount" placeholder="مبلغ را به تومان وارد کنید" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <button type="submit" id="charge-btn" class="w-full mt-4 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-all duration-300">
-                    شارژ حساب
-                </button>
-            </form>
-            <div id="message-box" class="mt-4 text-center text-sm p-3 rounded-lg"></div>
         </div>
     </div>
+</nav>
 
-    <script src="../../../assets/js/wallet.js"></script>
+<div class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 px-4">
+    <div class="w-full max-w-lg bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+        <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-slate-200 mb-2">موجودی و اعتبار</h2>
+        <p class="text-center text-slate-500 dark:text-slate-400 mb-6">موجودی حساب خود را مشاهده و آن را شارژ کنید.</p>
+
+        <div class="bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-blue-800 dark:text-blue-400 rounded-lg p-4 mb-6 text-center">
+            <p class="text-sm">موجودی فعلی شما</p>
+            <p id="wallet-balance" class="text-3xl font-bold">0 تومان</p>
+        </div>
+
+        <form id="charge-wallet-form">
+            <div class="mb-4">
+                <label for="amount" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">مبلغ شارژ (تومان)</label>
+                <input type="number" id="amount" placeholder="مبلغ را به تومان وارد کنید"
+                       class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white" required>
+            </div>
+            <button type="submit" id="charge-btn"
+                    class="w-full mt-4 bg-green-600 dark:bg-green-500 text-white dark:text-slate-200 font-bold py-3 px-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-all duration-300">
+                شارژ حساب
+            </button>
+        </form>
+
+        <div id="message-box" class="mt-4 text-center text-sm p-3 rounded-lg text-slate-700 dark:text-slate-200"></div>
+    </div>
+</div>
+
+<script>
+    const html = document.documentElement;
+    if (localStorage.theme === "dark") {
+        html.classList.add("dark");
+    } else {
+        html.classList.remove("dark");
+    }
+</script>
+
+<script src="../../../assets/js/wallet.js"></script>
 </body>
 </html>

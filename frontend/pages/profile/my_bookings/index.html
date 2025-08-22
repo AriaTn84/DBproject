@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>رزرو های من</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="../../../assets/css/style.css">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
 
-<nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+<nav class="bg-white dark:bg-slate-800 shadow-md fixed top-0 left-0 right-0 z-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
-                <a href="../../home/index.html" class="text-2xl font-bold text-blue-600">Raahi</a>
+                <a href="../../home/index.html" class="text-2xl font-bold text-blue-600 dark:text-blue-400">Raahi</a>
             </div>
             <div class="flex items-center">
                 <a href="../my_profile/index.html"
-                   class="flex items-center text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
+                   class="flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">
                     <span>بازگشت به پروفایل</span>
                 </a>
             </div>
@@ -26,12 +31,20 @@
 </nav>
 
 <div class="container mx-auto p-4 md:p-36 pt-24">
-    <h1 class="text-3xl font-bold text-center mb-8">تاریخچه رزروهای من</h1>
-
+    <h1 class="text-3xl font-bold text-center mb-8 text-slate-900 dark:text-slate-200">تاریخچه رزروهای من</h1>
 
     <div id="bookings-container" class="grid grid-cols-1 gap-6">
     </div>
 </div>
+
+<script>
+    const html = document.documentElement;
+    if (localStorage.theme === "dark") {
+        html.classList.add("dark");
+    } else {
+        html.classList.remove("dark");
+    }
+</script>
 
 <script src="../../../assets/js/my_bookings.js"></script>
 </body>

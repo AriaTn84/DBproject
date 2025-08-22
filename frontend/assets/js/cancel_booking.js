@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ۱. توکن احراز هویت را از حافظه محلی مرورگر برمی‌داریم
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-        // اگر توکن وجود نداشت، کاربر را به صفحه لاگین هدایت می‌کنیم
         window.location.href = '../../auth/login/index.html';
         return;
     }
@@ -12,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const bookingIdInput = document.getElementById('booking-id');
     const messageDiv = document.getElementById('message');
 
-    // اگر شناسه‌ی رزرو در URL بود، آن را در فیلد مربوطه قرار می‌دهیم
     if (bookingId) {
         bookingIdInput.value = bookingId;
     }
@@ -24,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // ۲. هدر درخواست را با توکن احراز هویت تنظیم می‌کنیم
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`
@@ -35,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         messageDiv.innerText = 'در حال ارسال درخواست...';
 
-        // ابتدا سعی می‌کنیم با جریمه کنسل کنیم
         fetch(cancelWithPenaltyURL, {
             method: 'POST',
             headers: headers,
@@ -47,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageDiv.innerText = 'رزرو با موفقیت کنسل شد و جریمه اعمال گردید.';
                 messageDiv.style.color = 'green';
             } else {
-                // اگر کنسل کردن با جریمه موفقیت‌آمیز نبود، بدون جریمه را امتحان می‌کنیم
                 fetch(cancelReservationURL, {
                     method: 'POST',
                     headers: headers,

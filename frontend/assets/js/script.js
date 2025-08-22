@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginLink = document.getElementById('login-link');
     const profileLink = document.getElementById('profile-link');
     const logoutLink = document.getElementById('logout-link');
-
     const accessToken = localStorage.getItem('accessToken');
 
     if (accessToken) {
@@ -97,70 +96,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getLeftSection(ticket) {
         return `
-            <div class="flex flex-col items-center justify-center gap-2 w-1/5 text-center border-l border-slate-200 pl-4">
-                <p class="text-xl font-bold text-blue-600">${Number(ticket.cost).toLocaleString()} تومان</p>
-                <button 
-                    class="select-flight-btn w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-all"
-                    data-ticket-id="${ticket.ticket_id}"
-                    data-origin="${ticket.departure_city}"
-                    data-destination="${ticket.arrival_city}"
-                    data-price="${ticket.cost}"
-                    data-vehicle="${ticket.vehicle_type}"
-                    data-departure-time-full="${ticket.departure_date}T${ticket.departure_time}"
-                    >
-                    انتخاب پرواز
-                </button>
-                <p class="text-xs text-slate-500">${ticket.remaining_capacity} صندلی باقی مانده</p>
-            </div>
-        `;
+        <div class="flex flex-col items-center justify-center gap-2 w-1/5 text-center border-l border-slate-200 dark:border-slate-700 pl-4">
+            <p class="text-xl font-bold text-blue-600 dark:text-blue-400">${Number(ticket.cost).toLocaleString()} تومان</p>
+            <button 
+                class="select-flight-btn w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-all"
+                data-ticket-id="${ticket.ticket_id}"
+                data-origin="${ticket.departure_city}"
+                data-destination="${ticket.arrival_city}"
+                data-price="${ticket.cost}"
+                data-vehicle="${ticket.vehicle_type}"
+                data-departure-time-full="${ticket.departure_date}T${ticket.departure_time}"
+            >
+                انتخاب سفر
+            </button>
+            <p class="text-xs text-slate-500 dark:text-slate-400">${ticket.remaining_capacity} صندلی باقی مانده</p>
+        </div>
+    `;
     }
+
 
     function getMiddleSection(ticket) {
         let vehicleIcon = '❔';
-        if (ticket.vehicle_type === 'Airplane') vehicleIcon = '✈️'; else if (ticket.vehicle_type === 'Train') vehicleIcon = '🚆'; else if (ticket.vehicle_type === 'Bus') vehicleIcon = '🚌';
+        if (ticket.vehicle_type === 'Airplane') vehicleIcon = '✈️';
+        else if (ticket.vehicle_type === 'Train') vehicleIcon = '🚆';
+        else if (ticket.vehicle_type === 'Bus') vehicleIcon = '🚌';
 
         const arrivalTime = ticket.arrival_time ? ticket.arrival_time.substring(0, 5) : '--:--';
 
         return `
-            <div class="flex-grow">
-                <div class="flex items-center justify-between">
-                    <div class="text-right">
-                        <p class="text-2xl font-bold font-mono">${ticket.departure_time.substring(0, 5)}</p>
-                        <p class="text-sm text-slate-600">${ticket.departure_city}</p>
-                    </div>
-                    <div class="flex-grow flex items-center mx-4">
-                        <div class="w-full border-b-2 border-dotted border-slate-300 relative">
-                            <span class="absolute left-1/2 -translate-x-1/2 -top-3 text-xl">${vehicleIcon}</span>
-                        </div>
-                    </div>
-                    <div class="text-left">
-                        <p class="text-2xl font-bold font-mono">${arrivalTime}</p>
-                        <p class="text-sm text-slate-600">${ticket.arrival_city}</p>
+        <div class="flex-grow">
+            <div class="flex items-center justify-between">
+                <div class="text-right">
+                    <p class="text-2xl font-bold font-mono text-slate-800 dark:text-slate-100">${ticket.departure_time.substring(0, 5)}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">${ticket.departure_city}</p>
+                </div>
+                <div class="flex-grow flex items-center mx-4">
+                    <div class="w-full border-b-2 border-dotted border-slate-300 dark:border-slate-600 relative">
+                        <span class="absolute left-1/2 -translate-x-1/2 -top-3 text-xl">${vehicleIcon}</span>
                     </div>
                 </div>
-                <div class="flex items-center justify-end gap-4 mt-2 text-xs text-blue-600">
-                    <a href="#" class="hover:underline flight-details-link" data-ticket-id="${ticket.ticket_id}">اطلاعات سفر</a>
-                    <a href="#" class="hover:underline refund-rules-link">قوانین استرداد</a>
+                <div class="text-left">
+                    <p class="text-2xl font-bold font-mono text-slate-800 dark:text-slate-100">${arrivalTime}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">${ticket.arrival_city}</p>
                 </div>
             </div>
-        `;
+            <div class="flex items-center justify-end gap-4 mt-2 text-xs text-blue-600 dark:text-blue-400">
+                <a href="#" class="hover:underline flight-details-link" data-ticket-id="${ticket.ticket_id}">اطلاعات سفر</a>
+                <a href="#" class="hover:underline refund-rules-link">قوانین استرداد</a>
+            </div>
+        </div>
+    `;
     }
+
 
     function getRightSection(ticket) {
         const travelClass = ticket.airplane_class || ticket.train_star || 'استاندارد';
         return `
-            <div class="flex flex-col items-center justify-center gap-2 w-1/4">
-                <div class="flex items-center gap-3">
-                    <img src="https://placehold.co/40x40/E03131/FFFFFF?text=${ticket.company_name.charAt(0)}" alt="Company Logo" class="w-10 h-10 rounded-full">
-                    <span class="font-semibold">${ticket.company_name}</span>
-                </div>
-                <div class="flex items-center gap-2 mt-2">
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">سیستمی</span>
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">${travelClass}</span>
-                </div>
+        <div class="flex flex-col items-center justify-center gap-2 w-1/4">
+            <div class="flex items-center gap-3">
+                <img src="https://placehold.co/40x40/E03131/FFFFFF?text=${ticket.company_name.charAt(0)}" alt="Company Logo" class="w-10 h-10 rounded-full">
+                <span class="font-semibold text-slate-800 dark:text-slate-200">${ticket.company_name}</span>
             </div>
-        `;
+            <div class="flex items-center gap-2 mt-2">
+                <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 px-2 py-1 rounded-full">سیستمی</span>
+                <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 px-2 py-1 rounded-full">${travelClass}</span>
+            </div>
+        </div>
+    `;
     }
+
 
     async function fetchTicketDetails(ticketId, detailsContainer) {
         detailsContainer.innerHTML = '<p class="text-center text-slate-500 p-4">در حال بارگذاری جزئیات...</p>';
@@ -227,44 +231,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createTicketCard(ticket) {
         const wrapper = document.createElement('div');
-        wrapper.className = 'bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 fade-in';
+        wrapper.className = 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-md transition-all duration-300 fade-in';
 
         const mainCard = document.createElement('div');
         mainCard.className = 'p-4 flex items-center justify-between gap-4';
         mainCard.innerHTML = getRightSection(ticket) + getMiddleSection(ticket) + getLeftSection(ticket);
 
         const detailsSection = document.createElement('div');
-        detailsSection.className = 'hidden p-4 border-t border-slate-200';
+        detailsSection.className = 'hidden p-4 border-t border-slate-200 dark:border-slate-700';
 
         const refundSection = document.createElement('div');
-        refundSection.className = 'hidden p-4 border-t border-slate-200';
+        refundSection.className = 'hidden p-4 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900';
         refundSection.innerHTML = `
             <div class="text-center mb-4">
-                <h4 class="font-semibold text-slate-800">قوانین استرداد بلیط</h4>
-                <p class="text-xs text-slate-500">درصد جریمه کسر شده بر اساس زمان اعلام کنسلی محاسبه می‌گردد.</p>
+                <h4 class="font-semibold text-slate-800 dark:text-slate-200">قوانین استرداد بلیط</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400">درصد جریمه کسر شده بر اساس زمان اعلام کنسلی محاسبه می‌گردد.</p>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
                 <div class="p-2">
-                    <p class="font-bold text-lg text-red-600">۱۰٪</p>
-                    <p class="text-slate-600">بیشتر از ۷ روز مانده به پرواز</p>
+                    <p class="font-bold text-lg text-red-600 dark:text-red-400">۱۰٪</p>
+                    <p class="text-slate-600 dark:text-slate-400">بیشتر از ۷ روز مانده به پرواز</p>
                 </div>
                 <div class="p-2">
-                    <p class="font-bold text-lg text-red-600">۲۰٪</p>
-                    <p class="text-slate-600">از ۷ روز تا ۱ روز مانده به پرواز</p>
+                    <p class="font-bold text-lg text-red-600 dark:text-red-400">۲۰٪</p>
+                    <p class="text-slate-600 dark:text-slate-400">از ۷ روز تا ۱ روز مانده به پرواز</p>
                 </div>
                 <div class="p-2">
-                    <p class="font-bold text-lg text-red-600">۳۰٪</p>
-                    <p class="text-slate-600">از ۲۴ ساعت تا ۱۲ ساعت مانده به پرواز</p>
+                    <p class="font-bold text-lg text-red-600 dark:text-red-400">۳۰٪</p>
+                    <p class="text-slate-600 dark:text-slate-400">از ۲۴ ساعت تا ۱۲ ساعت مانده به پرواز</p>
                 </div>
                 <div class="p-2">
-                    <p class="font-bold text-lg text-red-600">۵۰٪</p>
-                    <p class="text-slate-600">کمتر از ۱۲ ساعت مانده به پرواز</p>
+                    <p class="font-bold text-lg text-red-600 dark:text-red-400">۵۰٪</p>
+                    <p class="text-slate-600 dark:text-slate-400">کمتر از ۱۲ ساعت مانده به پرواز</p>
                 </div>
             </div>
-             <div class="text-center mt-4">
-                <button class="text-blue-600 text-sm font-semibold close-refund-btn">بستن</button>
+            <div class="text-center mt-4">
+                <button class="text-blue-600 dark:text-blue-400 text-sm font-semibold close-refund-btn">بستن</button>
             </div>
         `;
+
 
         wrapper.appendChild(mainCard);
         wrapper.appendChild(detailsSection);
@@ -274,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         detailsLink.addEventListener('click', async (e) => {
             e.preventDefault();
+            refundSection.classList.add('hidden');
             const ticketId = e.target.dataset.ticketId;
             const isHidden = detailsSection.classList.contains('hidden');
 
@@ -298,6 +304,11 @@ document.addEventListener('DOMContentLoaded', function () {
             detailsSection.classList.add('hidden');
             refundSection.classList.toggle('hidden');
             wrapper.classList.toggle('shadow-xl', !refundSection.classList.contains('hidden'));
+            refundSection.querySelector('.close-refund-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                refundSection.classList.add('hidden');
+                wrapper.classList.remove('shadow-xl');
+            })
         });
 
         return wrapper;
@@ -346,5 +357,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('امکان برقراری ارتباط با سرور وجود ندارد.');
             }
         }
+
     });
 });
